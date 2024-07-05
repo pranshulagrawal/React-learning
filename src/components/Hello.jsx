@@ -1,9 +1,25 @@
 import React from "react";
 
-const Hello = (props) => {
+/* Destructuring props as 
+1. const { name, message } = props;
+2. const Hello = ({name,message}) => {};
+
+*/
+
+// const Hello = (props) => {
+//   const { name, message } = props;
+//   return (
+//     <div>
+//       {message} {name}
+//     </div>
+//   );
+// };
+
+const Hello = ({ name, message, emoji }) => {
+  //   const { name, message } = props;
   return (
     <div>
-      {props.message} {props.name}
+      {message} {emoji} {name}
     </div>
   );
 };
