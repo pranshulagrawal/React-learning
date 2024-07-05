@@ -3,7 +3,13 @@ import React from "react";
 /* Destructuring props as 
 1. const { name, message } = props;
 2. const Hello = ({name,message}) => {};
+*/
 
+/* 
+Immutability of Props
+
+props.name = "Aniket";
+This perticular code snippet gives error as props are immutable in nature
 */
 
 // const Hello = (props) => {
