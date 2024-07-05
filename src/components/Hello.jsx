@@ -1,7 +1,11 @@
 import React from "react";
 
-const Hello = () => {
-  return <div>Hello from Component</div>;
+const Hello = (props) => {
+  return (
+    <div>
+      {props.message} {props.name}
+    </div>
+  );
 };
 
 export default Hello;
