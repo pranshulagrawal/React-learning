@@ -1,4 +1,5 @@
 import "./App.css";
+import ConditionalComponent from "./components/ConditionalComponent";
 import Fruits from "./components/Fruits";
 import Hello from "./components/Hello";
 import Passing_Array_props from "./components/Passing_Array_props";
@@ -19,7 +20,8 @@ function App() {
       <Hello name="Sunil" message="Hi There!" emoji="👋" />
       <Hello name="Rocky" message="Hi There!" emoji="👋" /> */}
       {/* <Passing_Array_props person={person} /> */}
-      <Fruits />
+      {/* <Fruits /> */}
+      <ConditionalComponent />
     </div>
   );
 }
