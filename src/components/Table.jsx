@@ -5,8 +5,6 @@ import dataStore from "../stores/Datastore";
 import "./table.css";
 
 const Table = () => {
-  const nodedata = dataStore.getData;
-
   const data = dataStore.getData;
   const [selectedNode, setSelectedNode] = useState(null);
   const tableRef = useRef(null);
