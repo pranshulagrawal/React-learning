@@ -5,10 +5,6 @@ import dataStore from "../stores/Datastore";
 import "./table.css";
 
 const Table = () => {
-  useEffect(() => {
-    dataService.fetchData(); // Fetch the data when the component mounts
-  }, []);
-
   const nodedata = dataStore.getData;
 
   const data = dataStore.getData;

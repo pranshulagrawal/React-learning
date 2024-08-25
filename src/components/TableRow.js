@@ -9,7 +9,7 @@ const TableRow = ({ node, level = 0, onRowClick }) => {
   };
 
   const handleRowClick = () => {
-    onRowClick(node); // Pass the clicked node data back to the parent
+    onRowClick(node);
   };
 
   return (
