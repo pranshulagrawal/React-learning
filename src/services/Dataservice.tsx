@@ -1,15 +1,13 @@
 import { flattenData } from "../helpers/filterdata";
-import dataStore from "../stores/Datastore";
+import { OrgNode } from "../model/node-model";
 
-class DataService {
-  async fetchData(): Promise<void> {
+export class DataService {
+  async fetchNodes(): Promise<OrgNode[]> {
     const response = await fetch("nested_organizational_data_india.json");
     const data = await response.json();
-    const flattenedData = flattenData(data.nodes);
-    console.log(data.nodes);
-    dataStore.setData(data.nodes);
+    // const flattenedData = flattenData(data.nodes);
+    // console.log(data.nodes);
+    // dataStore.setData(data.nodes);
+    return data.nodes;
   }
 }
-
-const dataService = new DataService();
-export default dataService;

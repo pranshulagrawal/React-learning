@@ -1,19 +1,21 @@
 import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import dataStore, { Node } from "../stores/Datastore";
-import dataService from "../services/Dataservice";
+import { RootStore } from "../stores";
+import { OrgNode } from "../model/node-model";
+
+const rootStore = new RootStore();
 
 const DataTable: React.FC = observer(() => {
+  const { nodeStore } = rootStore;
   useEffect(() => {
-    dataService.fetchData(); // Fetch the data when the component mounts
-  }, []);
+    if (nodeStore.nodes.length === 0) {
+      nodeStore.loadNodes();
+    }
+  }, [nodeStore]);
 
-  const nodedata = dataStore.getData;
+  const data = nodeStore.nodes;
 
-  const data = dataStore.getData;
-
-  // Recursive function to render rows
-  const renderRows = (nodes: Node[], level: number = 0): JSX.Element[] => {
+  const renderRows = (nodes: OrgNode[], level: number = 0): JSX.Element[] => {
     return nodes.map((node) => (
       <React.Fragment key={node.id}>
         <tr>

@@ -1,18 +1,25 @@
 import React, { useEffect } from "react";
 import "./App.css";
+import { RootStore } from "./stores";
+// import Table from "./components/Table";
+// import SearchHeader from "./components/search-header";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DataTable from "./components/Datatable";
 import Table from "./components/Table";
-import dataService from "./services/Dataservice";
+import HomeScreen from "./screens/HomeScreen";
 
+const rootStore = new RootStore();
 function App() {
   useEffect(() => {
-    dataService.fetchData(); // Fetch the data when the component mounts
+    rootStore.nodeStore.loadNodes(); // Load nodes at app load time
   }, []);
   return (
-    <div className="App">
-      {/* <DataTable /> */}
-      <Table />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomeScreen />} />
+        <Route path="*" element={<div>404</div>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -1,20 +1,33 @@
+// src/components/Table.tsx
 import React, { useState, useEffect, useRef } from "react";
 import TableRow from "./TableRow";
-import dataService from "../services/Dataservice";
-import dataStore from "../stores/Datastore";
+import { observer } from "mobx-react-lite";
+import { RootStore } from "../stores";
 import "./table.css";
+import { OrgNode } from "../model/node-model";
 
-const Table = () => {
-  const data = dataStore.getData;
-  const [selectedNode, setSelectedNode] = useState(null);
-  const tableRef = useRef(null);
+const rootStore = new RootStore();
 
-  const handleRowClick = (node) => {
+const Table: React.FC = observer(() => {
+  const { nodeStore } = rootStore;
+  const tableRef = useRef<HTMLDivElement>(null); // Add type to ref
+  const [selectedNode, setSelectedNode] = useState<OrgNode | null>(null); // Type state with Node or null
+
+  useEffect(() => {
+    if (nodeStore.nodes.length === 0) {
+      nodeStore.loadNodes();
+    }
+  }, [nodeStore]);
+
+  const data = nodeStore.nodes;
+  console.log("data", data);
+
+  const handleRowClick = (node: OrgNode) => {
     setSelectedNode(node); // Update the selected node state
   };
 
-  const handleClickOutside = (event) => {
-    if (tableRef.current && !tableRef.current.contains(event.target)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (tableRef.current && !tableRef.current.contains(event.target as Node)) {
       setSelectedNode(null); // Hide the bottom bar
     }
   };
@@ -80,6 +93,6 @@ const Table = () => {
       )}
     </div>
   );
-};
+});
 
 export default Table;
