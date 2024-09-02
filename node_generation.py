@@ -10,17 +10,35 @@ def random_date(start, end):
 def random_phone_number():
     return f"+91-{random.randint(1000, 9999)}-{random.randint(100000, 999999)}"
 
-# Sample data for roles, departments, and locations specific to India
-roles = ["CEO", "General Manager", "Project Manager", "Team Lead", "Software Engineer", "Data Analyst", "Intern"]
+# Sample data for departments, locations, statuses, etc., specific to India
 departments = ["Executive", "Human Resources", "Finance", "Engineering", "Marketing", "Sales", "Customer Support"]
 locations = ["Mumbai", "Bengaluru", "Delhi", "Hyderabad", "Chennai", "Pune", "Kolkata"]
 statuses = ["Active", "On Leave", "Retired", "Closed"]
 performance_ratings = ["A", "B", "C", "D"]
 skills_pool = ["Leadership", "Strategic Planning", "Communication", "Technical Expertise", "Project Management"]
 
+# Unique roles for each level from 1 to 16
+roles_per_level = [
+    ["CEO"],  # Level 1
+    ["General Manager"],  # Level 2
+    ["Operations Manager"],  # Level 3
+    ["Senior Project Manager"],  # Level 4
+    ["Project Manager"],  # Level 5
+    ["Team Lead"],  # Level 6
+    ["Software Architect"],  # Level 7
+    ["Senior Software Engineer"],  # Level 8
+    ["Software Engineer"],  # Level 9
+    ["Junior Software Engineer"],  # Level 10
+    ["Intern"],  # Level 11
+    ["Data Analyst"],  # Level 12
+    ["Quality Assurance Specialist"],  # Level 13
+    ["Customer Support Lead"],  # Level 14
+    ["Customer Support Specialist"],  # Level 15
+    ["Trainee"]  # Level 16
+]
+
 # Function to generate a single node
-def generate_node(id, level, parent_id):
-    role = random.choice(roles)
+def generate_node(id, level, parent_id, role):
     department = random.choice(departments)
     location = random.choice(locations)
     hire_date = random_date(datetime(2000, 1, 1), datetime(2023, 1, 1))
@@ -55,26 +73,47 @@ def generate_node(id, level, parent_id):
 def generate_nodes(total_nodes_required, max_levels):
     nodes = []
     id_counter = 10000001
-    total_nodes = 0
+    nodes_per_level = {level: 0 for level in range(1, max_levels + 1)}  # To count nodes at each level
     nodes_to_process = [(None, 1)]  # (parent_id, level)
+    total_nodes = 0
 
+    # Generate nodes level by level
     while total_nodes < total_nodes_required and nodes_to_process:
         parent_id, level = nodes_to_process.pop(0)
 
-        node = generate_node(id_counter, level, parent_id)
+        # Ensure there is a role for this level
+        role = roles_per_level[level - 1][0]
+
+        # Generate a node and append to the nodes list
+        node = generate_node(id_counter, level, parent_id, role)
         nodes.append(node)
         total_nodes += 1
+        nodes_per_level[level] += 1
         id_counter += 1
 
+        # Ensure children are created for the next level
         if total_nodes < total_nodes_required:
-            num_children = random.randint(0, 10)  # Random number of children (0 to 10)
-            next_level = level + 1 if level < max_levels else level
-            for _ in range(num_children):
-                if total_nodes + len(nodes_to_process) >= total_nodes_required:
-                    break
-                nodes_to_process.append((node["id"], next_level))
+            next_level = level + 1
+            if next_level <= max_levels:
+                # Number of children nodes to generate for the current node
+                num_children = min(random.randint(1, 5), total_nodes_required - total_nodes)
+                for _ in range(num_children):
+                    nodes_to_process.append((node["id"], next_level))
 
-    # Now, link children to their parents and calculate headcount
+    # Ensure that each level from 1 to max_levels is covered with at least one node
+    for level in range(1, max_levels + 1):
+        if nodes_per_level[level] == 0:
+            # If a level was missed, create a node for it
+            parent_level = level - 1 if level > 1 else None
+            parent_id = next((n["id"] for n in nodes if n["level"] == parent_level), None)
+            role = roles_per_level[level - 1][0]
+            node = generate_node(id_counter, level, parent_id, role)
+            nodes.append(node)
+            total_nodes += 1
+            nodes_per_level[level] += 1
+            id_counter += 1
+
+    # Link children to their parents and calculate headcount
     nodes_dict = {node["id"]: node for node in nodes}
     for node in nodes:
         if node["parentId"] is not None:
@@ -90,26 +129,30 @@ def generate_nodes(total_nodes_required, max_levels):
         if "children" in node and not node["children"]:
             del node["children"]
 
+    # Verify total nodes consistency
+    assert total_nodes == sum(nodes_per_level.values()), "Mismatch in total nodes count!"
+
     # Return the root nodes (those with no parent) and total_nodes count
-    return [node for node in nodes if node["parentId"] is None], total_nodes
+    return [node for node in nodes if node["parentId"] is None], total_nodes, nodes_per_level
 
 # Parameters
 total_nodes_required = 17000
 max_levels = 16
 
 # Generate the nodes
-root_nodes, total_nodes_generated = generate_nodes(total_nodes_required, max_levels)
+root_nodes, total_nodes_generated, nodes_per_level = generate_nodes(total_nodes_required, max_levels)
 
 # Collect metadata
 metadata = {
     "specifiedTotalNodes": total_nodes_required,
     "generatedTotalNodes": total_nodes_generated,
-    "roles": roles,
+    "rolesPerLevel": roles_per_level,  # Include roles for each level in metadata
     "skills": skills_pool,
     "performanceRatings": performance_ratings,
     "locations": locations,
     "departments": departments,
     "statuses": statuses,
+    "nodesPerLevel": nodes_per_level,  # Metadata for total nodes at each level
     "nodes": root_nodes
 }
 
@@ -118,4 +161,3 @@ file_name = "nested_organizational_data_india.json"
 json_data = json.dumps(metadata, indent=2)
 with open(file_name, "w") as f:
     f.write(json_data)
-
