@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { Input, Tree } from "antd";
-import type { TreeDataNode } from "antd";
 import { observer } from "mobx-react-lite";
 import { RootStore } from "../../stores";
 import { OrgNode } from "../../model/node-model";
@@ -74,31 +73,8 @@ const DataTree: React.FC = observer(() => {
 
     console.log("Checked nodes:", checked);
     console.log("Selected node key:", info.node.key);
-    const nodeLevel = info.node.level ?? 0;
-    console.log(
-      "Get node level:",
-      getNode([info.node], info.node.key, nodeLevel)
-    );
     console.log("Selected node level:", info.node.level); // Log node level
     console.log("Selected node:", info.node);
-  };
-
-  const onSelect = (
-    selectedKeys: React.Key[],
-    info: {
-      event: "select";
-      selected: boolean;
-      node: EventDataNode<CustomTreeDataNode>; // Updated to CustomTreeDataNode to include level
-      selectedNodes: DataNode[];
-      nativeEvent: MouseEvent;
-    }
-  ) => {
-    setSelectedKeys(selectedKeys);
-    setCheckedKeys(selectedKeys);
-    console.log("Selected keys:", selectedKeys);
-    console.log("Selected node:", info.node);
-    console.log("Selected node level:", info.node.level); // Log node level
-    console.log("Selected nodes:", info.selectedNodes);
   };
 
   const disableChildNodes = (
@@ -200,7 +176,6 @@ const DataTree: React.FC = observer(() => {
         checkable
         multiple={false}
         checkedKeys={checkedKeys}
-        onSelect={onSelect}
         onCheck={onCheck}
         showLine
         treeData={treeData}
