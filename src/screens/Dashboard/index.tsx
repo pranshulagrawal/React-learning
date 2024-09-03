@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Button, Divider } from "antd";
-import Table from "../../components/Table";
+import { Button } from "antd";
 import "./styles.css"; // Import the CSS module
 import HierarchyDropdown from "../../components/search-header/selective-dropdown";
 import DataTree from "../../components/search-header/tree";

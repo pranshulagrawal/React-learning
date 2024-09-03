@@ -1,4 +1,3 @@
-import { OrgNode } from "../model/node-model";
 import { CustomTreeDataNode } from "../model/treenode-model";
 
 export const getNode = (
