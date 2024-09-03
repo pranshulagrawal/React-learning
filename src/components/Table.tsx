@@ -20,7 +20,6 @@ const Table: React.FC = observer(() => {
   }, [nodeStore]);
 
   const data = nodeStore.nodes;
-  console.log("data", data);
 
   const handleRowClick = (node: OrgNode) => {
     setSelectedNode(node); // Update the selected node state

@@ -5,7 +5,7 @@ import HierarchyDropdown from "../../components/search-header/selective-dropdown
 import DataTree from "../../components/search-header/tree";
 import TreeTable from "../../components/TreeTable";
 
-const YourComponent: React.FC = () => {
+const Dashboard: React.FC = () => {
   const [tableVisible, setTableVisible] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
@@ -46,4 +46,4 @@ const YourComponent: React.FC = () => {
   );
 };
 
-export default YourComponent;
+export default Dashboard;

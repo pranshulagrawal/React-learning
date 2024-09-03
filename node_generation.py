@@ -156,8 +156,66 @@ metadata = {
     "nodes": root_nodes
 }
 
-# Convert to JSON and save to a file
+# Convert to JSON and save the nested organizational data
 file_name = "nested_organizational_data_india.json"
 json_data = json.dumps(metadata, indent=2)
 with open(file_name, "w") as f:
     f.write(json_data)
+
+# Function to flatten the nested nodes into a list
+def flatten_nodes(nested_nodes):
+    flat_list = []
+    def _flatten(node):
+        flat_list.append(node)
+        if "children" in node:
+            for child in node["children"]:
+                _flatten(child)
+    for root in nested_nodes:
+        _flatten(root)
+    return flat_list
+
+# Flatten the nodes from the nested structure
+all_nodes = flatten_nodes(root_nodes)
+
+# Generate detailed information for each node with additional information
+def generate_additional_node_details(node):
+    # Example additional details
+    biography = f"{node['name']} has been a key member of the {node['department']} department with expertise in {', '.join(node['skills'])}."
+    career_history = [
+        {"role": random.choice(roles_per_level[min(node['level']-1, len(roles_per_level)-1)]), "company": "Company A", "years": random.randint(1, 5)},
+        {"role": random.choice(roles_per_level[min(node['level'], len(roles_per_level)-1)]), "company": "Company B", "years": random.randint(1, 5)}
+    ]
+    additional_projects = random.sample(["Project Prabhat", "Project Dhruv", "Project Esha"], random.randint(1, 2))
+    notes = f"{node['name']} is currently working on optimizing the processes for {random.choice(node['projectAssigned'])}."
+
+    return {
+        "id": node["id"],
+        "name": node["name"],
+        "level": node["level"],
+        "roleTitle": node["roleTitle"],
+        "department": node["department"],
+        "location": node["location"],
+        "hireDate": node["hireDate"],
+        "email": node["email"],
+        "phoneNumber": node["phoneNumber"],
+        "status": node["status"],
+        "budget": node["budget"],
+        "performanceRating": node["performanceRating"],
+        "skills": node["skills"],
+        "projectAssigned": node["projectAssigned"],
+        "biography": biography,
+        "careerHistory": career_history,
+        "additionalProjects": additional_projects,
+        "notes": notes
+    }
+
+# Generate node details with additional information
+node_details = [generate_additional_node_details(node) for node in all_nodes]
+
+# Save node details to a separate JSON file
+node_details_file_name = "node_details.json"
+node_details_json_data = json.dumps(node_details, indent=2)
+with open(node_details_file_name, "w") as f:
+    f.write(node_details_json_data)
+
+print(f"Files '{file_name}' and '{node_details_file_name}' have been generated successfully.")

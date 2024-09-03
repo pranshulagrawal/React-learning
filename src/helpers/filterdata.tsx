@@ -1,17 +1,17 @@
-import { Node } from "../stores/Datastore";
+import { OrgNode } from "../model/node-model";
 
-export function flattenData(nodes: Node[]): Node[] {
-    const flatData: Node[] = [];
+export function flattenData(nodes: OrgNode[]): OrgNode[] {
+  const flatData: OrgNode[] = [];
 
-    function recurse(children: Node[]) {
-        children.forEach((node) => {
-            flatData.push(node); // Add the current node to the flat array
-            if (node.children && node.children.length > 0) {
-                recurse(node.children); // Recursively add children
-            }
-        });
-    }
+  function recurse(children: OrgNode[]) {
+    children.forEach((node) => {
+      flatData.push(node); // Add the current node to the flat array
+      if (node.children && node.children.length > 0) {
+        recurse(node.children); // Recursively add children
+      }
+    });
+  }
 
-    recurse(nodes);
-    return flatData;
+  recurse(nodes);
+  return flatData;
 }
