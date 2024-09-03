@@ -16,9 +16,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<TreeTable />} />
+        <Route path="/dashbaord" element={<TreeTable />} />
         <Route path="/home" element={<HomeScreen />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/" element={<Dashboard />} />
         <Route path="/table" element={<TreeTable />} />
         <Route path="*" element={<div>404</div>} />
       </Routes>
