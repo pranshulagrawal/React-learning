@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DataTable from "./components/Datatable";
 import Table from "./components/Table";
 import HomeScreen from "./screens/HomeScreen";
+import Dashboard from "./screens/Dashboard";
+import TreeTable from "./components/TreeTable";
 
 const rootStore = new RootStore();
 function App() {
@@ -17,6 +19,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomeScreen />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/table" element={<TreeTable />} />
         <Route path="*" element={<div>404</div>} />
       </Routes>
     </BrowserRouter>
