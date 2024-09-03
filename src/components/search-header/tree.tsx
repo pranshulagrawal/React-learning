@@ -1,19 +1,14 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { Input, Tree } from "antd";
+import { Tree } from "antd";
 import { observer } from "mobx-react-lite";
 import { RootStore } from "../../stores";
 import { OrgNode } from "../../model/node-model";
-import { DataNode, EventDataNode } from "antd/es/tree";
 import { CustomTreeDataNode } from "../../model/treenode-model";
-import { getNode } from "../../helpers/getnode";
 
 const rootStore = new RootStore();
 
-const { Search } = Input;
-
 const DataTree: React.FC = observer(() => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
-  const [searchValue, setSearchValue] = useState("");
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
@@ -30,6 +25,7 @@ const DataTree: React.FC = observer(() => {
     setExpandedKeys(newExpandedKeys);
     setAutoExpandParent(false);
   };
+  console.log("selectedKeys", selectedKeys);
 
   const onCheck = (
     checked: React.Key[] | { checked: React.Key[]; halfChecked: React.Key[] },
@@ -100,44 +96,45 @@ const DataTree: React.FC = observer(() => {
     }));
   };
 
-  const generateDataList = (
-    data: CustomTreeDataNode[]
-  ): { key: React.Key; title: string }[] => {
-    let dataList: { key: React.Key; title: string }[] = [];
+  //   const generateDataList = (
+  //     data: CustomTreeDataNode[]
+  //   ): { key: React.Key; title: string }[] => {
+  //     let dataList: { key: React.Key; title: string }[] = [];
 
-    const loop = (nodes: CustomTreeDataNode[]) => {
-      nodes.forEach((node) => {
-        dataList.push({ key: node.key, title: node.title as string });
-        if (node.children) {
-          loop(node.children);
-        }
-      });
-    };
+  //     const loop = (nodes: CustomTreeDataNode[]) => {
+  //       nodes.forEach((node) => {
+  //         dataList.push({ key: node.key, title: node.title as string });
+  //         if (node.children) {
+  //           loop(node.children);
+  //         }
+  //       });
+  //     };
 
-    loop(data);
-    return dataList;
-  };
+  //     loop(data);
+  //     return dataList;
+  //   };
 
-  const getParentKey = (
-    key: React.Key,
-    tree: CustomTreeDataNode[]
-  ): React.Key | null => {
-    let parentKey: React.Key | null = null;
-    for (const node of tree) {
-      if (node.children) {
-        if (node.children.some((item) => item.key === key)) {
-          parentKey = node.key;
-        } else {
-          parentKey = getParentKey(key, node.children);
-        }
-      }
-      if (parentKey) break;
-    }
-    return parentKey;
-  };
+  //   const getParentKey = (
+  //     key: React.Key,
+  //     tree: CustomTreeDataNode[]
+  //   ): React.Key | null => {
+  //     let parentKey: React.Key | null = null;
+  //     for (const node of tree) {
+  //       if (node.children) {
+  //         if (node.children.some((item) => item.key === key)) {
+  //           parentKey = node.key;
+  //         } else {
+  //           parentKey = getParentKey(key, node.children);
+  //         }
+  //       }
+  //       if (parentKey) break;
+  //     }
+  //     return parentKey;
+  //   };
 
   const treeData = useMemo(
     () => convertToTreeData(nodeStore.nodes),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [nodeStore.nodes, disabledKeys] // Dependency added to re-render when disabledKeys change
   );
 

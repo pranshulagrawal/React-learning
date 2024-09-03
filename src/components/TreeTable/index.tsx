@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Space, Switch, Table } from "antd";
+import React, { useEffect } from "react";
+import { Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
 import { OrgNode } from "../../model/node-model";
 import { RootStore } from "../../stores";
