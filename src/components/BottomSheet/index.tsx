@@ -1,5 +1,5 @@
 import React from "react";
-import { Drawer, Descriptions } from "antd";
+import { Drawer, Descriptions, List } from "antd";
 import { OrgNodeDetails } from "../../model/node-details-model";
 
 interface BottomSheetProps {
@@ -63,10 +63,24 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
             {nodeDetails.biography}
           </Descriptions.Item>
           <Descriptions.Item label="Career History">
-            {nodeDetails.careerHistory.join(", ")}
-          </Descriptions.Item>
-          <Descriptions.Item label="Additional Projects">
-            {nodeDetails.additionalProjects.join(", ")}
+            <List
+              dataSource={nodeDetails.careerHistory}
+              renderItem={(item) => (
+                <List.Item>
+                  <Descriptions size="small" column={3}>
+                    <Descriptions.Item label="Role">
+                      {item.role}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Company">
+                      {item.company}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Years">
+                      {item.years}
+                    </Descriptions.Item>
+                  </Descriptions>
+                </List.Item>
+              )}
+            />
           </Descriptions.Item>
           <Descriptions.Item label="Notes">
             {nodeDetails.notes}

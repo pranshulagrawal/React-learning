@@ -1,3 +1,9 @@
+export interface CareerHistory {
+  role: string;
+  company: string;
+  years: number;
+}
+
 export interface OrgNodeDetails {
   id: number;
   name: string; // Name of the node
@@ -14,7 +20,7 @@ export interface OrgNodeDetails {
   skills: string[]; // Array of skills
   projectAssigned: string[]; // Array of assigned projects
   biography: string; // Short biography of the node
-  careerHistory: string[]; // Array containing the career history of the node
+  careerHistory: CareerHistory[]; // Array containing the career history of the node
   additionalProjects: string[]; // Array of additional projects
   notes: string; // Any additional notes
 }
