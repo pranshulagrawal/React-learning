@@ -136,51 +136,23 @@ const DataTree: React.FC = observer(() => {
     return parentKey;
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    const dataList = generateDataList(treeData); // Generate dataList from treeData
-
-    const newExpandedKeys = dataList
-      .map((item) => {
-        if (item.title.indexOf(value) > -1) {
-          return getParentKey(item.key, treeData);
-        }
-        return null;
-      })
-      .filter(
-        (item, i, self): item is React.Key =>
-          !!(item && self.indexOf(item) === i)
-      );
-
-    setExpandedKeys(newExpandedKeys);
-    setSearchValue(value);
-    setAutoExpandParent(true);
-  };
-
   const treeData = useMemo(
     () => convertToTreeData(nodeStore.nodes),
     [nodeStore.nodes, disabledKeys] // Dependency added to re-render when disabledKeys change
   );
 
   return (
-    <div>
-      <Search
-        style={{ marginBottom: 8 }}
-        placeholder="Search"
-        onChange={onChange}
-      />
-      <Tree
-        onExpand={onExpand}
-        expandedKeys={expandedKeys}
-        autoExpandParent={autoExpandParent}
-        checkable
-        multiple={false}
-        checkedKeys={checkedKeys}
-        onCheck={onCheck}
-        showLine
-        treeData={treeData}
-      />
-    </div>
+    <Tree
+      onExpand={onExpand}
+      expandedKeys={expandedKeys}
+      autoExpandParent={autoExpandParent}
+      checkable
+      multiple={false}
+      checkedKeys={checkedKeys}
+      onCheck={onCheck}
+      showLine
+      treeData={treeData}
+    />
   );
 });
 
