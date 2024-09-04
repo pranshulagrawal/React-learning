@@ -6,6 +6,7 @@ import { RootStore } from "../../stores";
 import "./styles.css";
 import { OrgNodeDetails } from "../../model/node-details-model";
 import BottomSheet from "../BottomSheet";
+import { observer } from "mobx-react";
 
 const rootStore = new RootStore();
 
@@ -52,7 +53,7 @@ const addKeysToNodes = (nodes: OrgNode[]): OrgNode[] => {
   }));
 };
 
-const TreeTable: React.FC = () => {
+const TreeTable: React.FC = observer(() => {
   const [isDrawerVisible, setDrawerVisible] = useState(false);
   const [nodeDetails, setNodeDetails] = useState<OrgNodeDetails | null>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -60,8 +61,12 @@ const TreeTable: React.FC = () => {
   const { nodeStore } = rootStore;
   const { nodeDetailsStore } = rootStore;
   useEffect(() => {
-    nodeStore.loadNodes();
-    nodeDetailsStore.loadNodes();
+    if (nodeStore.nodes.length === 0) {
+      nodeStore.loadNodes();
+    }
+    if (nodeDetailsStore.nodesDetails.length === 0) {
+      nodeDetailsStore.loadNodes();
+    }
   }, [nodeStore, nodeDetailsStore]);
 
   const nodedata = nodeStore.nodes;
@@ -111,6 +116,6 @@ const TreeTable: React.FC = () => {
       />
     </>
   );
-};
+});
 
 export default TreeTable;
