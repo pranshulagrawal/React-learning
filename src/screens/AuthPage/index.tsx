@@ -101,7 +101,6 @@ const AuthPage: React.FC = () => {
             username: formData.username,
             email: formData.email,
             password: formData.password,
-            confirmPassword: formData.confirmPassword,
             acceptTerms: formData.acceptTerms,
           }),
         });
@@ -254,17 +253,7 @@ const AuthPage: React.FC = () => {
                 required
               />
             )}
-            {view !== "forgotPassword" && (
-              <input
-                className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-              />
-            )}
+
             {view === "signup" && (
               <>
                 <input
@@ -282,6 +271,32 @@ const AuthPage: React.FC = () => {
                   name="email"
                   placeholder="Email"
                   value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </>
+            )}
+
+            {view !== "forgotPassword" && (
+              <input
+                className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+              />
+            )}
+
+            {view === "signup" && (
+              <>
+                <input
+                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  value={formData.confirmPassword}
                   onChange={handleInputChange}
                   required
                 />
