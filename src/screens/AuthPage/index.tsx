@@ -136,8 +136,6 @@ const AuthPage: React.FC = () => {
         return;
       }
 
-      navigate("/dashbaord");
-
       // Success messages for each case
       if (view === "login") {
         setSuccessMessage("Successfully logged in!");
@@ -150,6 +148,7 @@ const AuthPage: React.FC = () => {
           confirmPassword: "",
           acceptTerms: false,
         });
+        navigate("/dashboard");
       } else if (view === "signup") {
         setSuccessMessage("Successfully signed up!");
         // Reset the form after signup
@@ -161,6 +160,7 @@ const AuthPage: React.FC = () => {
           confirmPassword: "",
           acceptTerms: false,
         });
+        navigate("/dashboard");
       } else if (view === "forgotPassword") {
         setSuccessMessage("Password reset link sent to your email.");
         // Reset the form after password reset
