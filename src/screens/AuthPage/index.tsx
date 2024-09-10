@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-
-interface UserFormData {
-  name?: string;
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword?: string;
-  acceptTerms?: boolean;
-}
+import { UserFormData } from "../../model/userFormData";
 
 const AuthPage: React.FC = () => {
   const [view, setView] = useState<"login" | "signup" | "forgotPassword">(
