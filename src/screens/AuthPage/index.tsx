@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { UserFormData } from "../../model/userFormData";
+import { useNavigate } from "react-router-dom";
 
 const AuthPage: React.FC = () => {
   const [view, setView] = useState<"login" | "signup" | "forgotPassword">(
@@ -16,6 +17,7 @@ const AuthPage: React.FC = () => {
   });
   const [errors, setErrors] = useState<string[]>([]);
   const [successMessage, setSuccessMessage] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -134,8 +136,7 @@ const AuthPage: React.FC = () => {
         return;
       }
 
-      const data = await response.json();
-      console.log(data);
+      navigate("/dashbaord");
 
       // Success messages for each case
       if (view === "login") {
