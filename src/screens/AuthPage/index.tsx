@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Sphere, Stars } from "@react-three/drei";
 
 interface UserFormData {
   name?: string;
@@ -48,19 +46,48 @@ const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
-      {/* Full-Height 3D Canvas Background */}
-      <Canvas className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none">
-        <ambientLight intensity={0.5} />
-        <Stars />
-        <OrbitControls enableZoom={false} />
-        <Sphere args={[1.5, 100, 200]} position={[0, 0, -5]}>
-          <meshStandardMaterial color="#6f42c1" wireframe />
-        </Sphere>
-      </Canvas>
+    <div className="relative w-full h-screen overflow-hidden bg-gradient-to-r from-purple-500 via-pink-500 to-red-500">
+      {/* Background Animation */}
+      <div className="absolute inset-0 z-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1440 320"
+          className="absolute bottom-0 w-full h-80 z-0"
+        >
+          <path
+            fill="#ffffff"
+            fillOpacity="0.3"
+            d="M0,64L1440,160L1440,320L0,320Z"
+          />
+        </svg>
+        <motion.div
+          className="absolute w-96 h-96 bg-pink-400 opacity-40 rounded-full filter blur-xl top-1/4 left-1/4"
+          animate={{
+            scale: [1, 1.5, 1],
+            opacity: [0.6, 0.9, 0.6],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 8,
+            ease: "easeInOut",
+          }}
+        ></motion.div>
+        <motion.div
+          className="absolute w-80 h-80 bg-purple-400 opacity-40 rounded-full filter blur-xl bottom-1/4 right-1/4"
+          animate={{
+            scale: [1, 1.5, 1],
+            opacity: [0.6, 0.9, 0.6],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 8,
+            ease: "easeInOut",
+          }}
+        ></motion.div>
+      </div>
 
       {/* Auth Form and Foreground Content */}
-      <div className="absolute z-10 flex flex-col items-center justify-center w-full h-full">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
         <motion.div
           className="bg-white p-10 rounded-xl shadow-xl w-full max-w-md"
           initial="hidden"
@@ -82,7 +109,7 @@ const AuthPage: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {view !== "forgotPassword" && (
               <input
-                className="input-field w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
                 type="text"
                 name="username"
                 placeholder="Username"
@@ -93,7 +120,7 @@ const AuthPage: React.FC = () => {
             )}
             {view !== "forgotPassword" && (
               <input
-                className="input-field w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
                 type="password"
                 name="password"
                 placeholder="Password"
@@ -105,7 +132,7 @@ const AuthPage: React.FC = () => {
             {view === "signup" && (
               <>
                 <input
-                  className="input-field w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
                   type="text"
                   name="name"
                   placeholder="Name"
@@ -114,7 +141,7 @@ const AuthPage: React.FC = () => {
                   required
                 />
                 <input
-                  className="input-field w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
                   type="email"
                   name="email"
                   placeholder="Email"
@@ -137,7 +164,7 @@ const AuthPage: React.FC = () => {
 
             {view === "forgotPassword" && (
               <input
-                className="input-field w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
                 type="email"
                 name="email"
                 placeholder="Enter your email"
