@@ -6,7 +6,7 @@ export class DataService {
     try {
       // Replace the URL below with your actual API endpoint
       const response = await fetch(
-        "https://https://ritzybackend-60a9b931e77d.herokuapp.com/api/org-nodes/hierarchy"
+        "https://react-learning-backend-il4k.onrender.com/api/org-nodes/hierarchy"
       );
 
       if (!response.ok) {
@@ -22,7 +22,9 @@ export class DataService {
   }
 
   async fetchNodesDetail(): Promise<OrgNodeDetails[]> {
-    const response = await fetch("node_details.json");
+    const response = await fetch(
+      "https://react-learning-backend-il4k.onrender.com/api/nodesInfo"
+    );
     const data = await response.json();
     return data;
   }
