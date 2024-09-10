@@ -84,6 +84,7 @@ const AuthPage: React.FC = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({
             username: formData.username,
             password: formData.password,
@@ -96,6 +97,7 @@ const AuthPage: React.FC = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({
             name: formData.name,
             username: formData.username,
