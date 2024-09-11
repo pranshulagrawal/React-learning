@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { UserFormData } from "../../model/userFormData";
 import { useNavigate } from "react-router-dom";
+import { notification } from "antd";
 
 const AuthPage: React.FC = () => {
   const [view, setView] = useState<"login" | "signup" | "forgotPassword">(
@@ -16,8 +17,30 @@ const AuthPage: React.FC = () => {
     acceptTerms: false,
   });
   const [errors, setErrors] = useState<string[]>([]);
-  const [successMessage, setSuccessMessage] = useState<string>("");
   const navigate = useNavigate();
+
+  // Ant Design notification function for success and error messages
+  const openNotificationWithIcon = (
+    type: "success" | "error",
+    message: string,
+    description: string,
+    duration: number | null = 3, // Set default duration for errors to 3 seconds
+    showProgress: boolean, // Set default showProgress to true
+    pauseOnHover: boolean // Set default pauseOnHover to true
+  ) => {
+    notification[type]({
+      message: message,
+      description: description,
+      duration: duration !== null ? duration : 0, // If duration is null, it will not auto-close
+      showProgress: showProgress,
+      pauseOnHover: pauseOnHover,
+    });
+  };
+
+  // Function to close all notifications when user interacts with the form
+  const closeAllNotifications = () => {
+    notification.destroy();
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -25,6 +48,7 @@ const AuthPage: React.FC = () => {
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
+    closeAllNotifications(); // Close notifications on any input change
   };
 
   const validateForm = (): boolean => {
@@ -34,12 +58,10 @@ const AuthPage: React.FC = () => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
     if (view === "signup") {
-      // Check for name
       if (formData.name?.trim().length === 0) {
         errorsArray.push("Name is required.");
       }
 
-      // Check for confirm password match
       if (formData.password !== formData.confirmPassword) {
         errorsArray.push("Passwords do not match.");
       }
@@ -47,13 +69,11 @@ const AuthPage: React.FC = () => {
         errorsArray.push("Invalid email format.");
       }
 
-      // Check for terms and conditions
       if (!formData.acceptTerms) {
         errorsArray.push("You must accept the terms and conditions.");
       }
     }
 
-    // Common checks for both login and signup
     if (formData.username.trim().length < 5) {
       errorsArray.push("Username must be at least 5 characters long.");
     }
@@ -64,23 +84,35 @@ const AuthPage: React.FC = () => {
       );
     }
 
-    // Update errors state
     setErrors(errorsArray);
     return errorsArray.length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccessMessage(""); // Clear success message
-    setErrors([]); // Clear previous errors
+    closeAllNotifications(); // Close notifications when user clicks submit
 
-    if (!validateForm()) return; // Validate form
+    setErrors([]);
+
+    if (!validateForm()) {
+      // Show error notifications with duration set to 3 seconds
+      errors.forEach((error) =>
+        openNotificationWithIcon(
+          "error",
+          "Validation Error",
+          error,
+          3,
+          false,
+          false
+        )
+      );
+      return;
+    }
 
     try {
-      let response: Response | undefined; // Initialize response as 'Response | undefined'
+      let response: Response | undefined;
 
       if (view === "login") {
-        // API call for login
         response = await fetch("http://localhost:5000/api/auth/login", {
           method: "POST",
           headers: {
@@ -93,7 +125,6 @@ const AuthPage: React.FC = () => {
           }),
         });
       } else if (view === "signup") {
-        // API call for signup
         response = await fetch("http://localhost:5000/api/auth/register", {
           method: "POST",
           headers: {
@@ -110,7 +141,6 @@ const AuthPage: React.FC = () => {
           }),
         });
       } else if (view === "forgotPassword") {
-        // API call for forgot password
         response = await fetch("/api/forgot-password", {
           method: "POST",
           headers: {
@@ -122,25 +152,40 @@ const AuthPage: React.FC = () => {
         });
       }
 
-      // Ensure response is defined
       if (response === undefined) {
-        setErrors(["No response from the server. Please try again."]);
+        openNotificationWithIcon(
+          "error",
+          "Error",
+          "No response from the server. Please try again.",
+          3,
+          true,
+          true
+        );
         return;
       }
 
-      // Handle API response
       if (!response.ok) {
         const errorData = await response.json();
-        setErrors([
+        openNotificationWithIcon(
+          "error",
+          "Error",
           errorData.message || "An error occurred. Please try again.",
-        ]);
+          3,
+          true,
+          true
+        );
         return;
       }
 
-      // Success messages for each case
       if (view === "login") {
-        setSuccessMessage("Successfully logged in!");
-        // Reset the form after login
+        openNotificationWithIcon(
+          "success",
+          "Login Successful",
+          "Successfully logged in!",
+          3,
+          true,
+          true
+        );
         setFormData({
           name: "",
           username: "",
@@ -151,10 +196,14 @@ const AuthPage: React.FC = () => {
         });
         navigate("/dashboard");
       } else if (view === "signup") {
-        setSuccessMessage(
-          "Successfully signed up! Check your email to activate your account."
+        openNotificationWithIcon(
+          "success",
+          "Signup Successful",
+          "Successfully signed up! Check your email to activate your account.",
+          3,
+          true,
+          true
         );
-        // Reset the form after signup
         setFormData({
           name: "",
           username: "",
@@ -164,8 +213,14 @@ const AuthPage: React.FC = () => {
           acceptTerms: false,
         });
       } else if (view === "forgotPassword") {
-        setSuccessMessage("Password reset link sent to your email.");
-        // Reset the form after password reset
+        openNotificationWithIcon(
+          "success",
+          "Password Reset",
+          "Password reset link sent to your email.",
+          3,
+          true,
+          true
+        );
         setFormData({
           name: "",
           username: "",
@@ -176,7 +231,14 @@ const AuthPage: React.FC = () => {
         });
       }
     } catch (error) {
-      setErrors(["Something went wrong. Please try again later."]);
+      openNotificationWithIcon(
+        "error",
+        "Error",
+        "Something went wrong. Please try again later.",
+        3,
+        true,
+        true
+      );
     }
   };
 
@@ -377,20 +439,6 @@ const AuthPage: React.FC = () => {
               </button>
             )}
           </p>
-
-          {successMessage && (
-            <div className="bg-green-100 text-green-700 p-4 rounded-lg mt-4">
-              {successMessage}
-            </div>
-          )}
-
-          {errors.length > 0 && (
-            <div className="bg-red-100 text-red-700 p-4 rounded-lg mt-4">
-              {errors.map((error, index) => (
-                <p key={index}>{error}</p>
-              ))}
-            </div>
-          )}
         </motion.div>
       </div>
     </div>
