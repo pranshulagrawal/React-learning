@@ -27,7 +27,7 @@ const AccountActivationPage: React.FC = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:5000/api/auth/activate/${token}`,
+        `${process.env.REACT_APP_API_URL}/auth/activate/${token}`,
         {
           method: "GET",
         }

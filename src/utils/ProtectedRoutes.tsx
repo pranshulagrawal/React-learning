@@ -9,7 +9,7 @@ const PrivateRoutes = () => {
     const checkAuth = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/auth/check-token",
+          `${process.env.REACT_APP_API_URL}/auth/check-token`,
           {
             method: "GET",
             credentials: "include", // Include cookies in request

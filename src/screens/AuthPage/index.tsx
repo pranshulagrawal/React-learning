@@ -137,7 +137,7 @@ const AuthPage: React.FC = () => {
       let response: Response | undefined;
 
       if (formType === "login") {
-        response = await fetch("http://localhost:5000/api/auth/login", {
+        response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -149,24 +149,27 @@ const AuthPage: React.FC = () => {
           }),
         });
       } else if (formType === "signup") {
-        response = await fetch("http://localhost:5000/api/auth/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            name: formData.name,
-            username: formData.username,
-            email: formData.email,
-            password: formData.password,
-            acceptTerms: formData.acceptTerms,
-            role: "user",
-          }),
-        });
+        response = await fetch(
+          `${process.env.REACT_APP_API_URL}/auth/register`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              name: formData.name,
+              username: formData.username,
+              email: formData.email,
+              password: formData.password,
+              acceptTerms: formData.acceptTerms,
+              role: "user",
+            }),
+          }
+        );
       } else if (formType === "forgotPassword") {
         response = await fetch(
-          "http://localhost:5000/api/auth/forgot-password",
+          `${process.env.REACT_APP_API_URL}/auth/forgot-password`,
           {
             method: "POST",
             headers: {
