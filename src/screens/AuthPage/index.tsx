@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { UserFormData } from "../../model/userFormData";
 import { useNavigate } from "react-router-dom";
-import { notification } from "antd";
+import { notification, Tabs } from "antd";
 
 const AuthPage: React.FC = () => {
+  // Separate state for tracking the current form view
   const [view, setView] = useState<"login" | "signup" | "forgotPassword">(
     "login"
   );
+
+  // State for handling form data
   const [formData, setFormData] = useState<UserFormData>({
     name: "",
     username: "",
@@ -24,16 +27,12 @@ const AuthPage: React.FC = () => {
     type: "success" | "error",
     message: string,
     description: string,
-    duration: number | null = 3, // Set default duration for errors to 3 seconds
-    showProgress: boolean, // Set default showProgress to true
-    pauseOnHover: boolean // Set default pauseOnHover to true
+    duration: number | null = 3
   ) => {
     notification[type]({
       message: message,
       description: description,
-      duration: duration !== null ? duration : 0, // If duration is null, it will not auto-close
-      showProgress: showProgress,
-      pauseOnHover: pauseOnHover,
+      duration: duration !== null ? duration : 0,
     });
   };
 
@@ -42,6 +41,7 @@ const AuthPage: React.FC = () => {
     notification.destroy();
   };
 
+  // Input change handler
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
@@ -51,31 +51,40 @@ const AuthPage: React.FC = () => {
     closeAllNotifications(); // Close notifications on any input change
   };
 
-  const validateForm = (): boolean => {
+  // Login form validation
+  const validateLoginForm = (): boolean => {
+    const errorsArray: string[] = [];
+    if (formData.username.trim().length < 5) {
+      errorsArray.push("Username must be at least 5 characters long.");
+    }
+    if (formData.password.trim().length === 0) {
+      errorsArray.push("Password is required.");
+    }
+    setErrors(errorsArray);
+    return errorsArray.length === 0;
+  };
+
+  // Signup form validation
+  const validateSignupForm = (): boolean => {
     const errorsArray: string[] = [];
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
-    if (view === "signup") {
-      if (formData.name?.trim().length === 0) {
-        errorsArray.push("Name is required.");
-      }
-
-      if (formData.password !== formData.confirmPassword) {
-        errorsArray.push("Passwords do not match.");
-      }
-      if (!emailRegex.test(formData.email)) {
-        errorsArray.push("Invalid email format.");
-      }
-
-      if (!formData.acceptTerms) {
-        errorsArray.push("You must accept the terms and conditions.");
-      }
+    if (formData.name?.trim().length === 0) {
+      errorsArray.push("Name is required.");
     }
 
-    if (formData.username.trim().length < 5) {
-      errorsArray.push("Username must be at least 5 characters long.");
+    if (formData.password !== formData.confirmPassword) {
+      errorsArray.push("Passwords do not match.");
+    }
+
+    if (!emailRegex.test(formData.email)) {
+      errorsArray.push("Invalid email format.");
+    }
+
+    if (!formData.acceptTerms) {
+      errorsArray.push("You must accept the terms and conditions.");
     }
 
     if (!passwordRegex.test(formData.password)) {
@@ -83,36 +92,50 @@ const AuthPage: React.FC = () => {
         "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character."
       );
     }
-
     setErrors(errorsArray);
     return errorsArray.length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Forgot password form validation
+  const validateForgotPasswordForm = (): boolean => {
+    const errorsArray: string[] = [];
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(formData.email)) {
+      errorsArray.push("Invalid email format.");
+    }
+    setErrors(errorsArray);
+    return errorsArray.length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent, formType: string) => {
     e.preventDefault();
     closeAllNotifications(); // Close notifications when user clicks submit
 
     setErrors([]);
 
-    if (!validateForm()) {
-      // Show error notifications with duration set to 3 seconds
+    let isValid = false;
+    if (formType === "login") {
+      isValid = validateLoginForm();
+    } else if (formType === "signup") {
+      isValid = validateSignupForm();
+    } else if (formType === "forgotPassword") {
+      isValid = validateForgotPasswordForm();
+    }
+
+    if (!isValid) {
+      // Show error notifications for validation errors
       errors.forEach((error) =>
-        openNotificationWithIcon(
-          "error",
-          "Validation Error",
-          error,
-          3,
-          false,
-          false
-        )
+        openNotificationWithIcon("error", "Validation Error", error, 3)
       );
       return;
     }
 
+    // Handle form submission logic here (login/signup/forgotPassword)
     try {
       let response: Response | undefined;
 
-      if (view === "login") {
+      if (formType === "login") {
         response = await fetch("http://localhost:5000/api/auth/login", {
           method: "POST",
           headers: {
@@ -124,7 +147,7 @@ const AuthPage: React.FC = () => {
             password: formData.password,
           }),
         });
-      } else if (view === "signup") {
+      } else if (formType === "signup") {
         response = await fetch("http://localhost:5000/api/auth/register", {
           method: "POST",
           headers: {
@@ -140,16 +163,19 @@ const AuthPage: React.FC = () => {
             role: "user",
           }),
         });
-      } else if (view === "forgotPassword") {
-        response = await fetch("/api/forgot-password", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formData.email,
-          }),
-        });
+      } else if (formType === "forgotPassword") {
+        response = await fetch(
+          "http://localhost:5000/api/auth/forgot-password",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: formData.email,
+            }),
+          }
+        );
       }
 
       if (response === undefined) {
@@ -157,9 +183,7 @@ const AuthPage: React.FC = () => {
           "error",
           "Error",
           "No response from the server. Please try again.",
-          3,
-          true,
-          true
+          3
         );
         return;
       }
@@ -170,21 +194,17 @@ const AuthPage: React.FC = () => {
           "error",
           "Error",
           errorData.message || "An error occurred. Please try again.",
-          3,
-          true,
-          true
+          3
         );
         return;
       }
 
-      if (view === "login") {
+      if (formType === "login") {
         openNotificationWithIcon(
           "success",
           "Login Successful",
           "Successfully logged in!",
-          3,
-          true,
-          true
+          3
         );
         setFormData({
           name: "",
@@ -195,14 +215,12 @@ const AuthPage: React.FC = () => {
           acceptTerms: false,
         });
         navigate("/dashboard");
-      } else if (view === "signup") {
+      } else if (formType === "signup") {
         openNotificationWithIcon(
           "success",
           "Signup Successful",
           "Successfully signed up! Check your email to activate your account.",
-          3,
-          true,
-          true
+          3
         );
         setFormData({
           name: "",
@@ -212,14 +230,12 @@ const AuthPage: React.FC = () => {
           confirmPassword: "",
           acceptTerms: false,
         });
-      } else if (view === "forgotPassword") {
+      } else if (formType === "forgotPassword") {
         openNotificationWithIcon(
           "success",
           "Password Reset",
           "Password reset link sent to your email.",
-          3,
-          true,
-          true
+          3
         );
         setFormData({
           name: "",
@@ -235,13 +251,12 @@ const AuthPage: React.FC = () => {
         "error",
         "Error",
         "Something went wrong. Please try again later.",
-        3,
-        true,
-        true
+        3
       );
     }
   };
 
+  // Form animation variants
   const formVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
@@ -296,33 +311,69 @@ const AuthPage: React.FC = () => {
           animate="visible"
           variants={formVariants}
         >
-          <motion.h2
-            className="text-3xl font-bold text-center mb-6 text-purple-700"
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1, transition: { duration: 0.6 } }}
+          {/* Tabs for Login, Signup, Forgot Password */}
+          <Tabs
+            defaultActiveKey="login"
+            centered
+            onChange={(key) =>
+              setView(key as "login" | "signup" | "forgotPassword")
+            }
           >
-            {view === "login"
-              ? "Login"
-              : view === "signup"
-              ? "Signup"
-              : "Reset Password"}
-          </motion.h2>
+            <Tabs.TabPane tab="Login" key="login">
+              <motion.h2
+                className="text-3xl font-bold text-center mb-6 text-purple-700"
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1, transition: { duration: 0.6 } }}
+              >
+                Login
+              </motion.h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {view !== "forgotPassword" && (
-              <input
-                className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
-                type="text"
-                name="username"
-                placeholder="Username"
-                value={formData.username}
-                onChange={handleInputChange}
-                required
-              />
-            )}
+              <form
+                onSubmit={(e) => handleSubmit(e, "login")}
+                className="space-y-4"
+              >
+                <input
+                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                  type="text"
+                  name="username"
+                  placeholder="Username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  required
+                />
 
-            {view === "signup" && (
-              <>
+                <input
+                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                />
+
+                <button
+                  type="submit"
+                  className="primary-button w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-all"
+                >
+                  Login
+                </button>
+              </form>
+            </Tabs.TabPane>
+
+            <Tabs.TabPane tab="Signup" key="signup">
+              <motion.h2
+                className="text-3xl font-bold text-center mb-6 text-purple-700"
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1, transition: { duration: 0.6 } }}
+              >
+                Signup
+              </motion.h2>
+
+              <form
+                onSubmit={(e) => handleSubmit(e, "signup")}
+                className="space-y-4"
+              >
                 <input
                   className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
                   type="text"
@@ -332,6 +383,17 @@ const AuthPage: React.FC = () => {
                   onChange={handleInputChange}
                   required
                 />
+
+                <input
+                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                  type="text"
+                  name="username"
+                  placeholder="Username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  required
+                />
+
                 <input
                   className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
                   type="email"
@@ -341,23 +403,17 @@ const AuthPage: React.FC = () => {
                   onChange={handleInputChange}
                   required
                 />
-              </>
-            )}
 
-            {view !== "forgotPassword" && (
-              <input
-                className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-              />
-            )}
+                <input
+                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                />
 
-            {view === "signup" && (
-              <>
                 <input
                   className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
                   type="password"
@@ -367,6 +423,7 @@ const AuthPage: React.FC = () => {
                   onChange={handleInputChange}
                   required
                 />
+
                 <label className="block text-gray-700">
                   <input
                     type="checkbox"
@@ -377,67 +434,57 @@ const AuthPage: React.FC = () => {
                   />
                   Accept Terms and Conditions
                 </label>
-              </>
-            )}
 
-            {view === "forgotPassword" && (
-              <input
-                className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-            )}
-
-            <button
-              type="submit"
-              className="primary-button w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-all"
-              onClick={handleSubmit}
-            >
-              {view === "login"
-                ? "Login"
-                : view === "signup"
-                ? "Signup"
-                : "Send Reset Link"}
-            </button>
-          </form>
-
-          <p className="text-center mt-4">
-            {view === "login" ? (
-              <>
                 <button
-                  className="text-blue-500 underline"
-                  onClick={() => setView("forgotPassword")}
-                >
-                  Forgot Password?
-                </button>
-                <br />
-                Don't have an account?{" "}
-                <button
-                  className="text-blue-500 underline"
-                  onClick={() => setView("signup")}
+                  type="submit"
+                  className="primary-button w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-all"
                 >
                   Signup
                 </button>
-              </>
-            ) : view === "signup" ? (
-              <button
-                className="text-blue-500 underline"
-                onClick={() => setView("login")}
+              </form>
+            </Tabs.TabPane>
+
+            <Tabs.TabPane tab="Forgot Password" key="forgotPassword">
+              <motion.h2
+                className="text-3xl font-bold text-center mb-6 text-purple-700"
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1, transition: { duration: 0.6 } }}
               >
-                Already have an account? Login
-              </button>
-            ) : (
-              <button
-                className="text-blue-500 underline"
-                onClick={() => setView("login")}
+                Forgot Password
+              </motion.h2>
+
+              <form
+                onSubmit={(e) => handleSubmit(e, "forgotPassword")}
+                className="space-y-4"
               >
-                Back to Login
-              </button>
-            )}
+                <input
+                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+
+                <button
+                  type="submit"
+                  className="primary-button w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-all"
+                >
+                  Send Reset Link
+                </button>
+              </form>
+            </Tabs.TabPane>
+          </Tabs>
+
+          <p className="text-center mt-4">
+            Don't have an account?{" "}
+            <button
+              className="text-blue-500 underline"
+              onClick={() => setView("signup")}
+            >
+              Signup
+            </button>
           </p>
         </motion.div>
       </div>
