@@ -5,10 +5,11 @@ import { useNavigate } from "react-router-dom";
 import { notification, Tabs } from "antd";
 
 const AuthPage: React.FC = () => {
-  // Separate state for tracking the current form view
-  const [view, setView] = useState<"login" | "signup" | "forgotPassword">(
-    "login"
-  );
+  // State for tracking the current form view (login/signup)
+  const [view, setView] = useState<"login" | "signup">("login");
+
+  // State for showing the forgot password form
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   // State for handling form data
   const [formData, setFormData] = useState<UserFormData>({
@@ -245,6 +246,7 @@ const AuthPage: React.FC = () => {
           confirmPassword: "",
           acceptTerms: false,
         });
+        setShowForgotPassword(false); // Hide forgot password and go back to login
       }
     } catch (error) {
       openNotificationWithIcon(
@@ -311,140 +313,151 @@ const AuthPage: React.FC = () => {
           animate="visible"
           variants={formVariants}
         >
-          {/* Tabs for Login, Signup, Forgot Password */}
-          <Tabs
-            defaultActiveKey="login"
-            centered
-            onChange={(key) =>
-              setView(key as "login" | "signup" | "forgotPassword")
-            }
-          >
-            <Tabs.TabPane tab="Login" key="login">
-              <motion.h2
-                className="text-3xl font-bold text-center mb-6 text-purple-700"
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1, transition: { duration: 0.6 } }}
+          {!showForgotPassword ? (
+            <>
+              {/* Tabs for Login, Signup */}
+              <Tabs
+                defaultActiveKey="login"
+                centered
+                onChange={(key) => setView(key as "login" | "signup")}
               >
-                Login
-              </motion.h2>
+                <Tabs.TabPane tab="Sign In" key="login">
+                  <motion.h2
+                    className="text-3xl font-bold text-center mb-6 text-purple-700"
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1, transition: { duration: 0.6 } }}
+                  >
+                    Sign In
+                  </motion.h2>
 
-              <form
-                onSubmit={(e) => handleSubmit(e, "login")}
-                className="space-y-4"
-              >
-                <input
-                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
-                  type="text"
-                  name="username"
-                  placeholder="Username"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  required
-                />
+                  <form
+                    onSubmit={(e) => handleSubmit(e, "login")}
+                    className="space-y-4"
+                  >
+                    <input
+                      className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                      type="text"
+                      name="username"
+                      placeholder="Username"
+                      value={formData.username}
+                      onChange={handleInputChange}
+                      required
+                    />
 
-                <input
-                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  required
-                />
+                    <input
+                      className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                      type="password"
+                      name="password"
+                      placeholder="Password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required
+                    />
 
-                <button
-                  type="submit"
-                  className="primary-button w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-all"
-                >
-                  Login
-                </button>
-              </form>
-            </Tabs.TabPane>
+                    <button
+                      type="submit"
+                      className="primary-button w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-all"
+                    >
+                      Login
+                    </button>
+                  </form>
 
-            <Tabs.TabPane tab="Signup" key="signup">
-              <motion.h2
-                className="text-3xl font-bold text-center mb-6 text-purple-700"
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1, transition: { duration: 0.6 } }}
-              >
-                Signup
-              </motion.h2>
+                  <p className="text-center mt-4">
+                    <button
+                      className="text-blue-500 underline"
+                      onClick={() => setShowForgotPassword(true)}
+                    >
+                      Forgot Password?
+                    </button>
+                  </p>
+                </Tabs.TabPane>
 
-              <form
-                onSubmit={(e) => handleSubmit(e, "signup")}
-                className="space-y-4"
-              >
-                <input
-                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
-                  type="text"
-                  name="name"
-                  placeholder="Name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                />
+                <Tabs.TabPane tab="Create Account" key="signup">
+                  <motion.h2
+                    className="text-3xl font-bold text-center mb-6 text-purple-700"
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1, transition: { duration: 0.6 } }}
+                  >
+                    Create New Account
+                  </motion.h2>
 
-                <input
-                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
-                  type="text"
-                  name="username"
-                  placeholder="Username"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  required
-                />
+                  <form
+                    onSubmit={(e) => handleSubmit(e, "signup")}
+                    className="space-y-4"
+                  >
+                    <input
+                      className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                      type="text"
+                      name="name"
+                      placeholder="Name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                    />
 
-                <input
-                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                />
+                    <input
+                      className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                      type="text"
+                      name="username"
+                      placeholder="Username"
+                      value={formData.username}
+                      onChange={handleInputChange}
+                      required
+                    />
 
-                <input
-                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  required
-                />
+                    <input
+                      className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                    />
 
-                <input
-                  className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
-                  type="password"
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  required
-                />
+                    <input
+                      className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                      type="password"
+                      name="password"
+                      placeholder="Password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required
+                    />
 
-                <label className="block text-gray-700">
-                  <input
-                    type="checkbox"
-                    name="acceptTerms"
-                    checked={formData.acceptTerms}
-                    onChange={handleInputChange}
-                    className="mr-2"
-                  />
-                  Accept Terms and Conditions
-                </label>
+                    <input
+                      className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                      type="password"
+                      name="confirmPassword"
+                      placeholder="Confirm Password"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      required
+                    />
 
-                <button
-                  type="submit"
-                  className="primary-button w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-all"
-                >
-                  Signup
-                </button>
-              </form>
-            </Tabs.TabPane>
+                    <label className="block text-gray-700">
+                      <input
+                        type="checkbox"
+                        name="acceptTerms"
+                        checked={formData.acceptTerms}
+                        onChange={handleInputChange}
+                        className="mr-2"
+                      />
+                      Accept Terms and Conditions
+                    </label>
 
-            <Tabs.TabPane tab="Forgot Password" key="forgotPassword">
+                    <button
+                      type="submit"
+                      className="primary-button w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-all"
+                    >
+                      Signup
+                    </button>
+                  </form>
+                </Tabs.TabPane>
+              </Tabs>
+            </>
+          ) : (
+            <>
               <motion.h2
                 className="text-3xl font-bold text-center mb-6 text-purple-700"
                 initial={{ scale: 0.8 }}
@@ -474,18 +487,17 @@ const AuthPage: React.FC = () => {
                   Send Reset Link
                 </button>
               </form>
-            </Tabs.TabPane>
-          </Tabs>
 
-          <p className="text-center mt-4">
-            Don't have an account?{" "}
-            <button
-              className="text-blue-500 underline"
-              onClick={() => setView("signup")}
-            >
-              Signup
-            </button>
-          </p>
+              <p className="text-center mt-4">
+                <button
+                  className="text-blue-500 underline"
+                  onClick={() => setShowForgotPassword(false)}
+                >
+                  Back to Sign In
+                </button>
+              </p>
+            </>
+          )}
         </motion.div>
       </div>
     </div>
