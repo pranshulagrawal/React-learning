@@ -106,6 +106,7 @@ const AuthPage: React.FC = () => {
             email: formData.email,
             password: formData.password,
             acceptTerms: formData.acceptTerms,
+            role: "user",
           }),
         });
       } else if (view === "forgotPassword") {
