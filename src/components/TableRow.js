@@ -49,7 +49,7 @@ const TableRow = ({ node, level = 0, onRowClick }) => {
       </tr>
       {hasChildren &&
         isExpanded &&
-        node.children.map((child) => (
+        node.children?.map((child) => (
           <TableRow
             key={child.id}
             node={child}

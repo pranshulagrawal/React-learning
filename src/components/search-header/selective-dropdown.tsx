@@ -26,7 +26,7 @@ const handleChange = (value: number) => {
 
 const HierarchyDropdown: React.FC = () => {
   // Transform the dataList into the format expected by Select
-  const options = dataList.map((item) => ({
+  const options = dataList?.map((item) => ({
     value: item.key, // The key becomes the value
     label: item.value, // The value becomes the label
   }));

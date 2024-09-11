@@ -67,7 +67,7 @@ const Table: React.FC = observer(() => {
           </tr>
         </thead>
         <tbody>
-          {data.map((node) => (
+          {data?.map((node) => (
             <TableRow key={node.id} node={node} onRowClick={handleRowClick} />
           ))}
         </tbody>

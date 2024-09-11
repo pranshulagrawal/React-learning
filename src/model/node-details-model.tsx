@@ -6,6 +6,7 @@ export interface CareerHistory {
 
 export interface OrgNodeDetails {
   id: number;
+  nodeId: number;
   name: string; // Name of the node
   level: number; // Hierarchical level of the node
   roleTitle: string; // Role title of the node

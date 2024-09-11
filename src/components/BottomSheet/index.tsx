@@ -24,7 +24,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     >
       {nodeDetails ? (
         <Descriptions column={1}>
-          <Descriptions.Item label="ID">{nodeDetails.id}</Descriptions.Item>
+          <Descriptions.Item label="ID">{nodeDetails.nodeId}</Descriptions.Item>
           <Descriptions.Item label="Name">{nodeDetails.name}</Descriptions.Item>
           <Descriptions.Item label="Role Title">
             {nodeDetails.roleTitle}

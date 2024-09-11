@@ -46,7 +46,7 @@ const columns: TableColumnsType<OrgNode> = [
 // };
 
 const addKeysToNodes = (nodes: OrgNode[]): OrgNode[] => {
-  return nodes.map((node) => ({
+  return nodes?.map((node) => ({
     ...node,
     key: node.id,
     children: node.children ? addKeysToNodes(node.children) : [],
@@ -72,9 +72,35 @@ const TreeTable: React.FC = observer(() => {
   const nodedata = nodeStore.nodes;
   const data = addKeysToNodes(nodedata);
 
-  const fetchNodeDetails = (id: number) => {
-    const details = nodeDetailsStore.getNodeDetailsById(id);
-    setNodeDetails(details || null); // Set node details or null if not found
+  const fetchNodeDetails = async (id: number) => {
+    try {
+      // Make an API call to fetch node details
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/nodesInfo/${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        // Handle non-200 HTTP responses
+        console.error(`Error fetching node details: ${response.statusText}`);
+        setNodeDetails(null);
+        return;
+      }
+
+      // Parse the response
+      const details = await response.json();
+
+      // Set node details or null if not found
+      setNodeDetails(details || null);
+    } catch (error) {
+      console.error("Error fetching node details:", error);
+      setNodeDetails(null); // Handle any errors by setting node details to null
+    }
   };
 
   const rowSelection: TableProps<OrgNode>["rowSelection"] = {
@@ -85,9 +111,7 @@ const TreeTable: React.FC = observer(() => {
     onSelect: (record, selected, selectedRows) => {
       if (selected) {
         // Check if the row is selected
-        console.log(record, selected, selectedRows);
-        fetchNodeDetails(record.id); // Fetch additional details for the selected node
-        console.log("nodeDetails", nodeDetails);
+        fetchNodeDetails(record.id);
         setDrawerVisible(true); // Show the bottom sheet
       } else {
         // Handle unselecting if needed (optional)
@@ -101,7 +125,7 @@ const TreeTable: React.FC = observer(() => {
       <Table
         columns={columns}
         rowSelection={{ ...rowSelection, checkStrictly }}
-        dataSource={data.map((item) => ({ ...item, key: item.id }))}
+        dataSource={data?.map((item) => ({ ...item, key: item.id }))}
         pagination={false}
         sticky={true}
         size="small"

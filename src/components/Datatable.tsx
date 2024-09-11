@@ -16,7 +16,7 @@ const DataTable: React.FC = observer(() => {
   const data = nodeStore.nodes;
 
   const renderRows = (nodes: OrgNode[], level: number = 0): JSX.Element[] => {
-    return nodes.map((node) => (
+    return nodes?.map((node) => (
       <React.Fragment key={node.id}>
         <tr>
           <td>{node.id}</td>

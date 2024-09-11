@@ -25,7 +25,6 @@ const DataTree: React.FC = observer(() => {
     setExpandedKeys(newExpandedKeys);
     setAutoExpandParent(false);
   };
-  console.log("selectedKeys", selectedKeys);
 
   const onCheck = (
     checked: React.Key[] | { checked: React.Key[]; halfChecked: React.Key[] },
@@ -66,17 +65,12 @@ const DataTree: React.FC = observer(() => {
         return newDisabledKeys;
       });
     }
-
-    console.log("Checked nodes:", checked);
-    console.log("Selected node key:", info.node.key);
-    console.log("Selected node level:", info.node.level); // Log node level
-    console.log("Selected node:", info.node);
   };
 
   const disableChildNodes = (
     nodes: CustomTreeDataNode[]
   ): CustomTreeDataNode[] => {
-    return nodes.map((node) => ({
+    return nodes?.map((node) => ({
       ...node,
       disableCheckbox: disabledKeys.has(node.key), // Disable checkbox based on state
       children: node.children ? disableChildNodes(node.children) : [],
@@ -85,7 +79,7 @@ const DataTree: React.FC = observer(() => {
 
   // Convert to CustomTreeDataNode to include level data
   const convertToTreeData = (nodes: OrgNode[]): CustomTreeDataNode[] => {
-    return nodes.map((node) => ({
+    return nodes?.map((node) => ({
       title: `${node.name} ${node.id} [${node.level}]`,
       key: node.id,
       disableCheckbox: false, // Enable checkbox for root nodes initially
