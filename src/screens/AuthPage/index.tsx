@@ -151,7 +151,9 @@ const AuthPage: React.FC = () => {
         });
         navigate("/dashboard");
       } else if (view === "signup") {
-        setSuccessMessage("Successfully signed up!");
+        setSuccessMessage(
+          "Successfully signed up! Check your email to activate your account."
+        );
         // Reset the form after signup
         setFormData({
           name: "",
@@ -161,7 +163,6 @@ const AuthPage: React.FC = () => {
           confirmPassword: "",
           acceptTerms: false,
         });
-        navigate("/dashboard");
       } else if (view === "forgotPassword") {
         setSuccessMessage("Password reset link sent to your email.");
         // Reset the form after password reset
