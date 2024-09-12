@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import TreeTable from "../components/TreeTable";
-import HomeScreen from "../screens/HomeScreen";
 import AuthPage from "../screens/AuthPage";
 import PrivateRoutes from "../utils/ProtectedRoutes";
 import AccountActivationPage from "../screens/AccountActivation";

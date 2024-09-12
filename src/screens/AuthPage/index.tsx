@@ -75,6 +75,12 @@ const AuthPage: React.FC = () => {
     if (formData.name?.trim().length === 0) {
       errorsArray.push("Name is required.");
     }
+    if (formData.username?.trim().length === 0) {
+      errorsArray.push("Username is required.");
+    }
+    if (formData.username?.trim().length < 5) {
+      errorsArray.push("Username must be at least 5 characters long.");
+    }
 
     if (formData.password !== formData.confirmPassword) {
       errorsArray.push("Passwords do not match.");
@@ -344,7 +350,6 @@ const AuthPage: React.FC = () => {
                       placeholder="Username"
                       value={formData.username}
                       onChange={handleInputChange}
-                      required
                     />
 
                     <input
@@ -354,7 +359,6 @@ const AuthPage: React.FC = () => {
                       placeholder="Password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      required
                     />
 
                     <button
@@ -395,7 +399,6 @@ const AuthPage: React.FC = () => {
                       placeholder="Name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      required
                     />
 
                     <input
@@ -405,7 +408,6 @@ const AuthPage: React.FC = () => {
                       placeholder="Username"
                       value={formData.username}
                       onChange={handleInputChange}
-                      required
                     />
 
                     <input
@@ -415,7 +417,6 @@ const AuthPage: React.FC = () => {
                       placeholder="Email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      required
                     />
 
                     <input
@@ -425,7 +426,6 @@ const AuthPage: React.FC = () => {
                       placeholder="Password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      required
                     />
 
                     <input
@@ -435,7 +435,6 @@ const AuthPage: React.FC = () => {
                       placeholder="Confirm Password"
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
-                      required
                     />
 
                     <label className="block text-gray-700">
@@ -480,7 +479,6 @@ const AuthPage: React.FC = () => {
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  required
                 />
 
                 <button
