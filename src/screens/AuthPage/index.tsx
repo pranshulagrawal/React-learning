@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { UserFormData } from "../../model/userFormData";
 import { useNavigate } from "react-router-dom";
-import { notification, Tabs } from "antd";
+import { notification, Tabs, Select } from "antd";
+
+const { Option } = Select;
 
 const AuthPage: React.FC = () => {
   // State for tracking the current form view (login/signup)
@@ -17,6 +19,7 @@ const AuthPage: React.FC = () => {
     name: "",
     username: "",
     email: "",
+    gender: "",
     password: "",
     confirmPassword: "",
     acceptTerms: false,
@@ -51,6 +54,13 @@ const AuthPage: React.FC = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
     closeAllNotifications(); // Close notifications on any input change
+  };
+
+  const handleGenderChange = (value: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      gender: value,
+    }));
   };
 
   // Login form validation
@@ -99,6 +109,10 @@ const AuthPage: React.FC = () => {
       errorsArray.push(
         "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character."
       );
+    }
+
+    if (!formData.gender || formData.gender.trim() === "") {
+      errorsArray.push("Gender is required.");
     }
     setErrors(errorsArray);
     return errorsArray.length === 0;
@@ -171,6 +185,9 @@ const AuthPage: React.FC = () => {
               password: formData.password,
               acceptTerms: formData.acceptTerms,
               role: "user",
+              profile: {
+                gender: formData.gender,
+              },
             }),
           }
         );
@@ -419,6 +436,18 @@ const AuthPage: React.FC = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                     />
+                    <Select
+                      showSearch
+                      placeholder="Select Gender"
+                      onChange={handleGenderChange}
+                      size="large"
+                      allowClear
+                      className="w-full focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
+                    >
+                      <Option value="male">Male</Option>
+                      <Option value="female">Female</Option>
+                      <Option value="other">Other</Option>
+                    </Select>
 
                     <input
                       className="input-field w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 transition-all"
