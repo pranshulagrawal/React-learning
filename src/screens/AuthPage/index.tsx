@@ -6,6 +6,7 @@ import { notification, Tabs } from "antd";
 
 const AuthPage: React.FC = () => {
   // State for tracking the current form view (login/signup)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [view, setView] = useState<"login" | "signup">("login");
 
   // State for showing the forgot password form
