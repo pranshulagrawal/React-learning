@@ -242,7 +242,7 @@ const AuthPage: React.FC = () => {
           confirmPassword: "",
           acceptTerms: false,
         });
-        navigate("/dashboard");
+        navigate("/admin/dashboard");
       } else if (formType === "signup") {
         openNotificationWithIcon(
           "success",

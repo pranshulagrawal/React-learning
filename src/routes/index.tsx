@@ -7,6 +7,7 @@ import AdminRoutes from "../utils/AdminRoutes"; // Import AdminRoutes
 import AccountActivationPage from "../screens/AccountActivation";
 import PasswordResetPage from "../screens/ResetPassword";
 import Dashboard from "../screens/Dashboard";
+import TreeWithSearch from "../components/TreeComponent";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -24,7 +25,7 @@ const AppRoutes: React.FC = () => {
 
           {/* Admin-only routes */}
           <Route element={<AdminRoutes />}>
-            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/admin/dashboard" element={<TreeWithSearch />} />
           </Route>
 
           {/* Fallback for non-existent routes */}
