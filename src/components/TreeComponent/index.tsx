@@ -140,16 +140,18 @@ const TreeWithSearch: React.FC = () => {
   // Helper function to highlight search term in node titles
   const getHighlightedTitle = (
     title: string,
+    key: string,
     searchValue: string
   ): React.ReactNode => {
+    const displayTitle = `[${key}] ${title}`; // Display in "[key] value" format
     const searchValueLower = searchValue.toLowerCase();
-    const titleLower = title.toLowerCase();
-    const index = titleLower.indexOf(searchValueLower);
-    if (index === -1) return title;
+    const displayTitleLower = displayTitle.toLowerCase();
+    const index = displayTitleLower.indexOf(searchValueLower);
+    if (index === -1) return displayTitle;
 
-    const beforeStr = title.substr(0, index);
-    const highlightedStr = title.substr(index, searchValue.length);
-    const afterStr = title.substr(index + searchValue.length);
+    const beforeStr = displayTitle.substr(0, index);
+    const highlightedStr = displayTitle.substr(index, searchValue.length);
+    const afterStr = displayTitle.substr(index + searchValue.length);
     return (
       <span>
         {beforeStr}
@@ -162,7 +164,11 @@ const TreeWithSearch: React.FC = () => {
   // Loop through the tree data and highlight matching nodes
   const loop = (data: DataNode[]): DataNode[] =>
     data.map((item) => {
-      const title = getHighlightedTitle(item.title!.toString(), searchValue);
+      const title = getHighlightedTitle(
+        item.title!.toString(),
+        item.key.toString(),
+        searchValue
+      );
 
       return {
         ...item,
