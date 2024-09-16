@@ -6,7 +6,7 @@ import PrivateRoutes from "../utils/ProtectedRoutes";
 import AdminRoutes from "../utils/AdminRoutes"; // Import AdminRoutes
 import AccountActivationPage from "../screens/AccountActivation";
 import PasswordResetPage from "../screens/ResetPassword";
-import Dashboard from "../screens/Dashboard";
+// import Dashboard from "../screens/Dashboard";
 import TreeWithSearch from "../components/TreeComponent";
 
 const AppRoutes: React.FC = () => {
