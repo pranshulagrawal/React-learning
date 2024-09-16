@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 
 const PrivateRoutes = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Add a loading state
+  const [loading, setLoading] = useState<boolean>(true);
+  const [userRole, setUserRole] = useState<string | null>(null); // To store user role
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -17,7 +18,10 @@ const PrivateRoutes = () => {
         );
 
         if (response.ok) {
+          const data = await response.json();
           setIsAuthenticated(true);
+          setUserRole(data.user.role);
+          console.log("User role:", data.user.role);
         } else {
           setIsAuthenticated(false);
         }
@@ -32,12 +36,15 @@ const PrivateRoutes = () => {
     checkAuth();
   }, []);
 
-  // Show loading indicator while authentication is being checked
   if (loading) {
-    return <div>Loading...</div>; // You can replace this with a spinner or other loading indicator
+    return <div>Loading...</div>;
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  return isAuthenticated ? (
+    <Outlet context={{ userRole }} />
+  ) : (
+    <Navigate to="/login" replace />
+  );
 };
 
 export default PrivateRoutes;
