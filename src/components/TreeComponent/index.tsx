@@ -3,8 +3,6 @@ import { Tree, Input } from "antd";
 import type { DataNode, TreeProps } from "antd/es/tree";
 
 const { Search } = Input;
-
-// Sample tree data
 const treeData: DataNode[] = [
   {
     title: "Parent 1",
@@ -38,7 +36,6 @@ const TreeWithSearch: React.FC = () => {
   const [disabledKeys, setDisabledKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
 
-  // Helper function to get all parent keys for a given key
   const getParentKeys = (
     key: string,
     nodes: DataNode[],
@@ -57,23 +54,20 @@ const TreeWithSearch: React.FC = () => {
     return [];
   };
 
-  // Function to recursively search nodes by title or key and gather matching nodes
   const searchNodes = (node: DataNode, searchTerm: string): DataNode[] => {
     const matched =
       node.title?.toString().toLowerCase().includes(searchTerm.toLowerCase()) ||
-      node.key.toString().includes(searchTerm); // Convert key to string
+      node.key.toString().includes(searchTerm);
 
-    if (matched) return [node]; // If node matches, return it
+    if (matched) return [node];
 
     if (node.children) {
-      // Recursively check its children
       return node.children.flatMap((child) => searchNodes(child, searchTerm));
     }
 
     return [];
   };
 
-  // Handle search input change (search both key and title)
   const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setSearchValue(value);
@@ -84,19 +78,17 @@ const TreeWithSearch: React.FC = () => {
       return;
     }
 
-    // Find all matching nodes and their parent keys
     const expandedKeys = treeData
-      .flatMap(
-        (item) => searchNodes(item, value).map((node) => node.key.toString()) // Search nodes recursively
+      .flatMap((item) =>
+        searchNodes(item, value).map((node) => node.key.toString())
       )
-      .flatMap((key) => [...getParentKeys(key, treeData), key]) // Include parent keys for each matching node
-      .filter((key, index, self) => self.indexOf(key) === index); // Remove duplicates
+      .flatMap((key) => [...getParentKeys(key, treeData), key])
+      .filter((key, index, self) => self.indexOf(key) === index);
 
     setExpandedKeys(expandedKeys);
     setAutoExpandParent(true);
   };
 
-  // Tree select logic (check/uncheck)
   const onCheck: TreeProps["onCheck"] = (checkedKeysValue, info) => {
     const selectedKey = info.node.key as string;
     let newCheckedKeys = checkedKeysValue as React.Key[];
@@ -104,12 +96,12 @@ const TreeWithSearch: React.FC = () => {
 
     if (info.checked) {
       console.log(`Checked node key: ${selectedKey}`);
+      newCheckedKeys = [info.node.key];
       if (info.node.children) {
         const childKeys = getAllChildKeys(info.node.children);
-        newDisabledKeys = [...newDisabledKeys, ...childKeys];
+        newDisabledKeys = [...childKeys];
       }
     } else {
-      // If a node is unchecked, uncheck and re-enable its child nodes
       if (info.node.children) {
         const childKeys = getAllChildKeys(info.node.children);
         newDisabledKeys = newDisabledKeys.filter(
@@ -117,7 +109,7 @@ const TreeWithSearch: React.FC = () => {
         );
         newCheckedKeys = newCheckedKeys.filter(
           (key) => !childKeys.includes(key)
-        ); // Uncheck all children
+        );
       }
     }
 
@@ -125,7 +117,6 @@ const TreeWithSearch: React.FC = () => {
     setDisabledKeys(newDisabledKeys);
   };
 
-  // Get all keys of child nodes recursively
   const getAllChildKeys = (children: DataNode[]): React.Key[] => {
     let keys: React.Key[] = [];
     children.forEach((child) => {
@@ -137,13 +128,12 @@ const TreeWithSearch: React.FC = () => {
     return keys;
   };
 
-  // Helper function to highlight search term in node titles
   const getHighlightedTitle = (
     title: string,
     key: string,
     searchValue: string
   ): React.ReactNode => {
-    const displayTitle = `[${key}] ${title}`; // Display in "[key] value" format
+    const displayTitle = `[${key}] ${title}`;
     const searchValueLower = searchValue.toLowerCase();
     const displayTitleLower = displayTitle.toLowerCase();
     const index = displayTitleLower.indexOf(searchValueLower);
@@ -161,7 +151,6 @@ const TreeWithSearch: React.FC = () => {
     );
   };
 
-  // Loop through the tree data and highlight matching nodes
   const loop = (data: DataNode[]): DataNode[] =>
     data.map((item) => {
       const title = getHighlightedTitle(
@@ -173,7 +162,7 @@ const TreeWithSearch: React.FC = () => {
       return {
         ...item,
         title,
-        disabled: disabledKeys.includes(item.key), // Disable based on the disabledKeys state
+        disabled: disabledKeys.includes(item.key),
         children: item.children ? loop(item.children) : [],
       };
     });
