@@ -501,7 +501,7 @@ const TreeWithSearch: React.FC = () => {
         <div
           style={{
             height: 300,
-            overflowY: "scroll",
+            overflow: "auto",
             width: "100%",
           }}
         >
