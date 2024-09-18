@@ -103,7 +103,7 @@ const treeData = [
             title: "Child 2-2-2",
             value: "0-1-1-2",
             children: [
-              { title: "Child 2-2-2-1", value: "0-1-1-2-1", children: [] },
+              { title: "Child 2-2-2-1", value: "0-1-1-2-1" },
               { title: "Child 2-2-2-2", value: "0-1-1-2-2" },
             ],
           },
@@ -121,6 +121,13 @@ const TreeWithTreeSelect: React.FC = () => {
     setValue(newValue);
   };
 
+  const filterTreeNode = (inputValue: string, treeNode: any) => {
+    const title = treeNode.title?.toLowerCase() || "";
+    const nodeValue = treeNode.value?.toLowerCase() || "";
+    const searchValue = inputValue.toLowerCase();
+    return title.includes(searchValue) || nodeValue.includes(searchValue);
+  };
+
   return (
     <TreeSelect
       showSearch
@@ -131,6 +138,7 @@ const TreeWithTreeSelect: React.FC = () => {
       placeholder="Please select"
       allowClear
       onChange={onChange}
+      filterTreeNode={filterTreeNode}
     />
   );
 };
