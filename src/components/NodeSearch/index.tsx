@@ -1,5 +1,5 @@
-import React from "react";
-import { TreeSelect, Select, Button, DatePicker, Table } from "antd";
+import React, { useState } from "react";
+import { TreeSelect, Button, DatePicker, Table } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import "./styles.scss"; // Import the styles
@@ -35,7 +35,26 @@ const treeData = [
 ];
 const { RangePicker } = DatePicker;
 
-// Dummy data for the Ant Design table
+// Recursive data generation for n-level nested table
+const generateNestedData: any = (depth: number, prefix = "") => {
+  return Array.from({ length: 3 }).map((_, i) => {
+    const currentDepth = depth + 1;
+    const key = `${prefix}${i}`;
+    const hasChildren = currentDepth < 4; // Adjust depth level here
+    return {
+      key,
+      name: `John Brown ${key}`,
+      age: i + 20 + depth * 10,
+      address: `New York No. ${key} Lake Park`,
+      description: `This is level ${depth} row ${i}`,
+      children: hasChildren ? generateNestedData(currentDepth, `${key}-`) : [],
+    };
+  });
+};
+
+// Generate nested data
+const nestedData = generateNestedData(0);
+
 const columns = [
   {
     title: "Name",
@@ -52,35 +71,36 @@ const columns = [
     dataIndex: "address",
     key: "address",
   },
-];
-
-const data = [
   {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park",
+    title: "Action",
+    key: "action",
+    render: () => <Button type="link">More</Button>,
   },
 ];
 
 const dateFormat = "YYYY-MM-DD";
 
 const NodeSearch = () => {
+  const [expandable, setExpandable] = useState(true);
+
+  const expandableProps = expandable
+    ? {
+        expandedRowRender: (record: {
+          description:
+            | string
+            | number
+            | boolean
+            | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+            | Iterable<React.ReactNode>
+            | React.ReactPortal
+            | null
+            | undefined;
+        }) => <p>{record.description}</p>,
+      }
+    : undefined;
+
   return (
-    <div>
-      {/* First Container: Components */}
+    <div className="node-search-wrapper">
       <div className="node-search-container">
         <div className="ant-components-row">
           <DatePicker
@@ -98,9 +118,19 @@ const NodeSearch = () => {
         </div>
       </div>
 
-      {/* Second Container: Table */}
-      <div className="node-search-table">
-        <Table columns={columns} dataSource={data} />
+      {/* Second Container: N-Level Nested Table */}
+      <div className="node-search-table-container">
+        <Table
+          className="node-search-table"
+          bordered
+          loading={false}
+          size="small"
+          title={() => <div>Node Details</div>}
+          columns={columns}
+          dataSource={nestedData}
+          expandable={expandableProps}
+          scroll={{ y: "400px" }} // Ensure the table scrolls when necessary
+        />
       </div>
     </div>
   );
