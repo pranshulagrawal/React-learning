@@ -1,0 +1,76 @@
+.layout-container {
+    height: 100vh; // Full viewport height
+  }
+  
+  .sider-container {
+    background: #f9f9f9 !important; // Slightly off-white background for Sider
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Light shadow effect for Sider
+    .ant-layout-sider-trigger {
+      background-color: #f9f9f9;  // Same off-white background for the collapse button
+      color: black;  // Change the icon (caret) color
+  
+      &:hover {
+        background-color: #f0f0f0; // Slightly darker shade on hover
+        color: black;  // Maintain icon color on hover
+      }
+    }
+  
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      flex-grow: 1;
+      background: #f9f9f9 !important;
+    }
+  }
+  
+  .header-container {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center; // Center the header content
+    padding: 0 !important;  // Override Ant Design default padding
+    height: 50px !important;  // Set custom height
+    line-height: 50px !important;  // Set line-height equal to height to center content
+    background: #f9f9f9 !important; // Same slightly off-white background for the header
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Light shadow effect for Header
+  
+    .navbar {
+      display: flex;
+      flex-direction: row-reverse; // Make menu items align from right to left
+      justify-content: flex-start; // Ensure they stay in place from the right side
+      flex-grow: 1;
+      background: #f9f9f9 !important;
+      line-height: 50px !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    .demo-logo {
+      // Adjust logo size (optional) for a minimal header
+      width: 50px;
+      height: auto;
+    }
+  }
+  
+  .content-container {
+    padding: 0 10px;
+    margin-bottom: 15px;
+    flex: 1;
+    display: grid;
+    grid-template-rows: min-content min-content 1fr;  // Breadcrumb takes minimal space, content takes the rest
+    grid-template-columns: 1fr; // Single column layout
+  }
+  
+  .footer-container {
+    text-align: center;
+  }
+  
+  .ant-components-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px; // Add space below the row
+  }

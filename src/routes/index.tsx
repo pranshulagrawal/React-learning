@@ -9,11 +9,17 @@ import PasswordResetPage from "../screens/ResetPassword";
 // import Dashboard from "../screens/Dashboard";
 import TreeWithSearch from "../components/TreeComponent";
 import TreeWithTreeSelect from "../components/TreeSelectComponent";
+import Dashboard2 from "../screens/Dashboard2";
+import NodeSearch from "../components/NodeSearch";
+
+const NodeDetails = () => <div>Node Details Content</div>;
+const VarTrack = () => <div>VarTrack Content</div>;
 
 const AppRoutes: React.FC = () => {
   return (
     <Router>
       <Routes>
+        {/* <Route path="/login" element={<Dashboard2 />} /> */}
         <Route path="/login" element={<AuthPage />} />
         <Route path="/activate/:token" element={<AccountActivationPage />} />
         <Route path="/reset-password/:token" element={<PasswordResetPage />} />
@@ -21,15 +27,21 @@ const AppRoutes: React.FC = () => {
         {/* Protected routes */}
         <Route element={<PrivateRoutes />}>
           <Route path="/data" element={<TreeTable />} />
-          <Route path="/" element={<TreeTable />} />
+          <Route path="/" element={<Dashboard2 />} />
           <Route path="/table" element={<TreeTable />} />
-
           {/* Admin-only routes */}
           <Route element={<AdminRoutes />}>
+            <Route element={<Dashboard2 />}>
+              <Route path="/admin/dashb" element={<Dashboard2 />} />{" "}
+              {/* Dashboard route */}
+              <Route path="/admin/nodedetail" element={<NodeSearch />} />{" "}
+              {/* NodeDetails route */}
+              <Route path="/admin/vartrack" element={<VarTrack />} />{" "}
+              {/* VarTrack route */}
+            </Route>
             <Route path="/admin/dashboard" element={<TreeWithSearch />} />
-            <Route path="/admin/dashboard2" element={<TreeWithTreeSelect />} />
+            <Route path="/admin/dashboard2" element={<Dashboard2 />} />
           </Route>
-
           {/* Fallback for non-existent routes */}
           <Route path="*" element={<div>404 - Page Not Found</div>} />
         </Route>

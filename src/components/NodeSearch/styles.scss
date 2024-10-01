@@ -1,0 +1,26 @@
+.ant-components-row {
+    display: grid;
+    grid-template-columns: 0.3fr 1fr 0.3fr 0.2fr; // TreeSelect takes max space
+    gap: 10px; // Space between components
+    align-items: center; // Align components vertically
+    margin-bottom: 20px; // Space below the row
+  }
+  
+  .tree-select {
+    width: 100%; // Make TreeSelect take up the maximum available space
+  }
+  
+  .node-search-container {
+    padding: 15px;
+    background-color: #fff; // White background for NodeSearch container
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Optional: slight shadow for elevation
+    margin-bottom: 10px; // Margin to create space between the two containers
+  }
+  
+  .node-search-table {
+    background-color: #fff; // White background for table container
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Optional: slight shadow for elevation
+  }
+  
