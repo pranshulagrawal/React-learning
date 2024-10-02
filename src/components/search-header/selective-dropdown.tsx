@@ -20,15 +20,14 @@ const dataList = [
   { key: 16, value: "Trainee" },
 ];
 
-const handleChange = (value: number) => {
-  console.log(`Selected value: ${value}`);
-};
+interface HierarchyDropdownProps {
+  onChange: (value: number | null) => void; // Pass the selected value to the parent component
+}
 
-const HierarchyDropdown: React.FC = () => {
-  // Transform the dataList into the format expected by Select
+const HierarchyDropdown: React.FC<HierarchyDropdownProps> = ({ onChange }) => {
   const options = dataList?.map((item) => ({
-    value: item.key, // The key becomes the value
-    label: item.value, // The value becomes the label
+    value: item.key,
+    label: item.value,
   }));
 
   return (
@@ -40,8 +39,8 @@ const HierarchyDropdown: React.FC = () => {
       filterOption={(input, option) =>
         (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
       }
-      onChange={handleChange}
-      options={options} // Use the transformed options array
+      onChange={onChange} // Call the parent's onChange function
+      options={options}
       placeholder="Select an option"
     />
   );

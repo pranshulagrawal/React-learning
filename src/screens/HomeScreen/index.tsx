@@ -2,12 +2,11 @@ import React from "react";
 import "./styles.css";
 import Table from "../../components/Table";
 import DataTree from "../../components/search-header/tree";
-import HierarchyDropdown from "../../components/search-header/selective-dropdown";
 
 const HomeScreen: React.FC = () => {
   return (
     <div>
-      <HierarchyDropdown />
+      {/* <HierarchyDropdown /> */}
       <DataTree />
       <Table />
     </div>

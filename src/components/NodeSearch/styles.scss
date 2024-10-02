@@ -5,13 +5,10 @@
   align-items: center; /* Align components vertically */
 }
 
-.tree-select {
-  width: 100%; /* Make TreeSelect take up the maximum available space */
-}
-
 .node-search-wrapper {
-  display: flex;
+  display: grid;
   flex-direction: column;
+  grid-template-columns: 1fr;
   height: 100%; /* Take up full height of parent */
 }
 
@@ -25,14 +22,37 @@
 
 .node-search-table-container {
   flex-grow: 1; /* Allow the table container to grow and fill available space */
-  display: grid;
-  grid-template-rows: 1fr; /* Make the table take up the available space */
+  display: flex;
+  flex-direction: column;
   overflow: hidden; /* Ensure no overflow happens */
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  .empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+
+    .ant-empty-description {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .ant-empty-image {
+      margin-bottom: 20px;
+    }
+  }
 }
 
-.node-search-table {
-  max-height: 600px !important;
+.ant-table-wrapper {
+  flex-grow: 1; /* Allow the Ant Design table wrapper to grow with the container */
+  overflow-y: auto; /* Enable vertical scrolling inside the table */
 }
+
+/* Styling the Empty State Container */

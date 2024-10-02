@@ -8,11 +8,9 @@ import AccountActivationPage from "../screens/AccountActivation";
 import PasswordResetPage from "../screens/ResetPassword";
 // import Dashboard from "../screens/Dashboard";
 import TreeWithSearch from "../components/TreeComponent";
-import TreeWithTreeSelect from "../components/TreeSelectComponent";
 import Dashboard2 from "../screens/Dashboard2";
 import NodeSearch from "../components/NodeSearch";
 
-const NodeDetails = () => <div>Node Details Content</div>;
 const VarTrack = () => <div>VarTrack Content</div>;
 
 const AppRoutes: React.FC = () => {

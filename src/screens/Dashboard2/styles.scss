@@ -1,69 +1,130 @@
 .layout-container {
-  height: 100vh; // Full viewport height
-}
+  height: 100vh;
 
-.sider-container {
-  background: #f9f9f9 !important; // Slightly off-white background for Sider
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Light shadow effect for Sider
-  .ant-layout-sider-trigger {
-    background-color: #f9f9f9; // Same off-white background for the collapse button
-    color: black; // Change the icon (caret) color
+  .header-container {
+    background-color: white;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
-    &:hover {
-      background-color: #f0f0f0; // Slightly darker shade on hover
-      color: black; // Maintain icon color on hover
+    .ant-avatar {
+      cursor: pointer;
+    }
+
+    .app-version {
+      font-size: 14px;
+      color: #888;
+      margin-left: 20px;
     }
   }
 
-  .sidebar {
+  .sider-container {
+    background: #fff;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .content-container {
+    padding: 20px;
+    background-color: #f0f2f5;
+  }
+}
+
+.notification-dropdown {
+  padding: 10px;
+  min-width: 500px;
+  background-color: #fff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+
+  .filter-section {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    flex-grow: 1;
-    background: #f9f9f9 !important;
-  }
-}
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
 
-.header-container {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center; // Center the header content
-  padding: 0 !important; // Override Ant Design default padding
-  height: 50px !important; // Set custom height
-  line-height: 50px !important; // Set line-height equal to height to center content
-  background: #f9f9f9 !important; // Same slightly off-white background for the header
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Light shadow effect for Header
+    .filter-icon {
+      cursor: pointer;
+      font-size: 20px;
+      margin-right: 10px;
+    }
 
-  .navbar {
-    display: flex;
-    flex-direction: row-reverse; // Make menu items align from right to left
-    justify-content: flex-start; // Ensure they stay in place from the right side
-    flex-grow: 1;
-    background: #f9f9f9 !important;
-    line-height: 50px !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    .filter-dropdown {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      margin-top: 10px;
+    }
   }
 
-  .demo-logo {
-    // Adjust logo size (optional) for a minimal header
-    width: 50px;
-    height: auto;
+  .notification-list {
+    max-height: 300px;
+    overflow-y: auto;
+
+    .ant-list-item {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #f6f6f6;
+      }
+
+      .ant-list-item-meta-title {
+        font-weight: 600;
+      }
+
+      .ant-list-item-meta-description {
+        color: #777;
+      }
+    }
+
+    .error {
+      background-color: #ffebeb;
+      border-left: 5px solid #ff4d4f;
+    }
+
+    .warning {
+      background-color: #fff7e6;
+      border-left: 5px solid #faad14;
+    }
+
+    .success {
+      background-color: #f6ffed;
+      border-left: 5px solid #52c41a;
+    }
+  }
+
+  .close-btn {
+    margin-top: 10px;
+    .ant-btn-primary {
+      background-color: #1890ff;
+      border: none;
+      &:hover {
+        background-color: #40a9ff;
+      }
+    }
   }
 }
-
-.content-container {
-  padding: 0 10px;
-  margin-bottom: 15px;
-  flex: 1;
-  display: grid;
-  grid-template-rows: min-content min-content 1fr; // Breadcrumb takes minimal space, content takes the rest
-  grid-template-columns: 1fr; // Single column layout
+.header-container .notification-icon {
+  margin-right: 20px;
 }
 
-.footer-container {
-  text-align: center;
+.header-container .filter-icon {
+  margin-right: 10px;
+}
+
+.header-container .avatar-container {
+  margin-right: 15px;
+}
+
+@media (max-width: 576px) {
+  .notification-dropdown {
+    max-width: 100%;
+  }
 }
