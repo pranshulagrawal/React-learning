@@ -7,7 +7,6 @@ import {
   Dropdown,
   Avatar,
   Button,
-  Space,
   Breadcrumb,
   List,
   Badge,
@@ -23,8 +22,10 @@ import {
   MailOutlined,
   CloseOutlined,
   CheckCircleOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
 import "./styles.scss";
+
 const { Header, Sider, Content } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -59,21 +60,6 @@ const Breadcrumbs: React.FC = () => {
 
   return <Breadcrumb items={breadcrumbItems} style={{ margin: "10px 0" }} />;
 };
-
-const profileMenu = (
-  <Menu>
-    <Menu.Item key="1" icon={<SettingOutlined />}>
-      Profile Settings
-    </Menu.Item>
-    <Menu.Item key="2" disabled>
-      Username: John Doe
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="3" icon={<LogoutOutlined />}>
-      Logout
-    </Menu.Item>
-  </Menu>
-);
 
 type NotificationType = "error" | "warning" | "success";
 const notificationsData: Record<
@@ -119,8 +105,6 @@ const Dashboard2: React.FC = () => {
     "success",
   ]);
 
-  const navigate = useNavigate();
-
   const unreadCount = Object.values(notifications)
     .flat()
     .filter((notification) => !notification.read).length;
@@ -130,6 +114,18 @@ const Dashboard2: React.FC = () => {
       ...prev,
       [type]: prev[type].map((n) => (n.id === id ? { ...n, read: true } : n)),
     }));
+  };
+
+  const handleMarkAllAsRead = () => {
+    setNotifications((prev) => {
+      const updatedNotifications = { ...prev };
+      Object.keys(updatedNotifications).forEach((type) => {
+        updatedNotifications[type as NotificationType] = updatedNotifications[
+          type as NotificationType
+        ].map((n) => ({ ...n, read: true }));
+      });
+      return updatedNotifications;
+    });
   };
 
   const handleMarkAsUnread = (id: number, type: NotificationType) => {
@@ -156,6 +152,48 @@ const Dashboard2: React.FC = () => {
     .flat()
     .filter((n) => filter.includes(n.type));
 
+  const navigate = useNavigate();
+
+  const badgeCount = unreadCount === 0 ? 0 : unreadCount;
+
+  const handleLogout = async () => {
+    try {
+      // Call the logout API
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/auth/logout`,
+        {
+          method: "POST",
+          credentials: "include", // Ensure cookies are sent
+        }
+      );
+
+      if (response.ok) {
+        // If successful, navigate to the login page
+        navigate("/login");
+      } else {
+        console.error("Failed to log out");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
+  const profileMenu = (
+    <Menu>
+      <Menu.Item key="2" danger disabled>
+        User: John Doe
+      </Menu.Item>
+      <Menu.Item key="1" icon={<SettingOutlined />}>
+        V1.0.0
+      </Menu.Item>
+
+      <Menu.Divider />
+      <Menu.Item key="3" icon={<LogoutOutlined />} onClick={handleLogout}>
+        Logout
+      </Menu.Item>
+    </Menu>
+  );
+
   const NotificationMenu = (
     <div className="notification-dropdown">
       <div className="filter-section">
@@ -180,7 +218,17 @@ const Dashboard2: React.FC = () => {
           </Checkbox>
         </div>
 
-        <div className="close-btn">
+        <div className="action-btns">
+          {/* Mark All as Read Button */}
+          <Button
+            type="primary"
+            onClick={handleMarkAllAsRead}
+            style={{ marginLeft: "10px" }}
+          >
+            Mark All as Read
+          </Button>
+
+          {/* Close Menu Button */}
           <Button
             type="primary"
             onClick={() => setDropdownOpen(false)}
@@ -274,19 +322,18 @@ const Dashboard2: React.FC = () => {
       </Sider>
       <Layout>
         <Header className="header-container">
-          <Space style={{ marginLeft: "auto", alignItems: "center" }}>
-            <div className="app-version">Version 1.0.0</div>
+          <div className="notification-section">
             <Dropdown
               overlay={NotificationMenu}
               open={dropdownOpen}
               onOpenChange={(open) => setDropdownOpen(open)}
               trigger={["click"]}
-              placement="bottomRight"
             >
-              <Badge count={unreadCount} offset={[10, 0]}>
+              <Badge count={badgeCount} offset={[10, 0]}>
                 <Button
+                  className="notification-icon"
                   type="text"
-                  icon={<MailOutlined className="notification-icon" />}
+                  icon={<BellOutlined />}
                 />
               </Badge>
             </Dropdown>
@@ -298,7 +345,7 @@ const Dashboard2: React.FC = () => {
                 icon={<UserOutlined />}
               />
             </Dropdown>
-          </Space>
+          </div>
         </Header>
         <Content className="content-container">
           <Breadcrumbs />

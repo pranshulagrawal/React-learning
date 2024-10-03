@@ -37,7 +37,7 @@ const AppRoutes: React.FC = () => {
               <Route path="/admin/vartrack" element={<VarTrack />} />{" "}
               {/* VarTrack route */}
             </Route>
-            <Route path="/admin/dashboard" element={<TreeWithSearch />} />
+            <Route path="/admin/dashboard" element={<Dashboard2 />} />
             <Route path="/admin/dashboard2" element={<Dashboard2 />} />
           </Route>
           {/* Fallback for non-existent routes */}

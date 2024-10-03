@@ -2,20 +2,51 @@
   height: 100vh;
 
   .header-container {
-    background-color: white;
-    padding: 0 20px;
-    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 60px;
+    display: grid;
     align-items: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-
-    .ant-avatar {
-      cursor: pointer;
-    }
+    background: #fff; /* Modern gradient background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Softer shadow for a modern look */
+    padding: 0 5px !important;
+    gap: 20px;
 
     .app-version {
       font-size: 14px;
       color: #888;
-      margin-left: 20px;
+    }
+
+    .notification-section {
+      display: grid;
+      justify-content: flex-end;
+      gap: 30px;
+      grid-template-columns: auto auto;
+
+      .notification-icon {
+        width: 22px;
+        font-size: 22px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #fff !important;
+        }
+      }
+      .anticon {
+        font-size: 20px !important;
+      }
+    }
+
+    .profile-section {
+      display: flex;
+      align-items: center;
+
+      .avatar-container {
+        margin-left: 10px;
+        cursor: pointer;
+      }
     }
   }
 
@@ -111,19 +142,13 @@
     }
   }
 }
-.header-container .notification-icon {
-  margin-right: 20px;
-}
-
-.header-container .filter-icon {
-  margin-right: 10px;
-}
-
-.header-container .avatar-container {
-  margin-right: 15px;
-}
 
 @media (max-width: 576px) {
+  .header-container {
+    grid-template-columns: 1fr auto auto; /* Simplified layout for small screens */
+    padding: 10px;
+  }
+
   .notification-dropdown {
     max-width: 100%;
   }
