@@ -6,10 +6,9 @@ import PrivateRoutes from "../utils/ProtectedRoutes";
 import AdminRoutes from "../utils/AdminRoutes"; // Import AdminRoutes
 import AccountActivationPage from "../screens/AccountActivation";
 import PasswordResetPage from "../screens/ResetPassword";
-// import Dashboard from "../screens/Dashboard";
-import TreeWithSearch from "../components/TreeComponent";
 import Dashboard2 from "../screens/Dashboard2";
 import NodeSearch from "../components/NodeSearch";
+import ErrorPage from "../screens/ErrorPage";
 
 const VarTrack = () => <div>VarTrack Content</div>;
 
@@ -41,7 +40,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/admin/dashboard2" element={<Dashboard2 />} />
           </Route>
           {/* Fallback for non-existent routes */}
-          <Route path="*" element={<div>404 - Page Not Found</div>} />
+          <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>
     </Router>
