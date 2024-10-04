@@ -47,7 +47,7 @@ function getItem(
 }
 
 const sidebaroptions: MenuItem[] = [
-  getItem("Dashboard", "/admin/dashb", <PieChartOutlined />),
+  getItem("Dashboard", "/admin/dashboard", <PieChartOutlined />),
   getItem("Node Details", "/admin/nodedetail", <DesktopOutlined />),
   getItem("VarTrack", "/admin/vartrack", <UserOutlined />),
 ];
@@ -61,7 +61,7 @@ const Breadcrumbs: React.FC = () => {
     href: `/${pathSnippets.slice(0, index + 1).join("/")}`,
   }));
 
-  return <Breadcrumb items={breadcrumbItems} style={{ margin: "10px 0" }} />;
+  return <Breadcrumb items={breadcrumbItems} style={{ margin: "10px 20px" }} />;
 };
 
 type NotificationType = "error" | "warning" | "success";
@@ -108,7 +108,7 @@ const Dashboard2: React.FC = () => {
     "success",
   ]);
 
-  const [logoutModalVisible, setLogoutModalVisible] = useState(false); // State for modal visibility
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
   const unreadCount = Object.values(notifications)
     .flat()
@@ -192,7 +192,11 @@ const Dashboard2: React.FC = () => {
 
   const profileMenu = (
     <Menu>
-      <Menu.Item key="1" icon={<UserOutlined />} disabled>
+      <Menu.Item
+        key="1"
+        icon={<UserOutlined />}
+        onClick={() => navigate("/admin/profile")}
+      >
         John Doe
       </Menu.Item>
       <Menu.Item key="2" icon={<LockOutlined />} disabled>
@@ -380,8 +384,9 @@ const Dashboard2: React.FC = () => {
             </Dropdown>
           </div>
         </Header>
+        <Content></Content>
+        <Breadcrumbs />
         <Content className="content-container">
-          <Breadcrumbs />
           <Outlet />
         </Content>
       </Layout>

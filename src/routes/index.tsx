@@ -10,6 +10,8 @@ import Dashboard2 from "../screens/Dashboard2";
 import NodeSearch from "../components/NodeSearch";
 import ErrorPage from "../screens/ErrorPage";
 import ChangeLog from "../components/ChangeLog";
+import Profile from "../components/Profile";
+import DashboardHome from "../components/DashBaordHome";
 
 const VarTrack = () => <div>VarTrack Content</div>;
 
@@ -30,12 +32,13 @@ const AppRoutes: React.FC = () => {
           {/* Admin-only routes */}
           <Route element={<AdminRoutes />}>
             <Route element={<Dashboard2 />}>
-              <Route path="/admin/dashb" element={<Dashboard2 />} />{" "}
+              <Route path="/admin/dashboard" element={<DashboardHome />} />{" "}
               {/* Dashboard route */}
               <Route path="/admin/nodedetail" element={<NodeSearch />} />{" "}
               {/* NodeDetails route */}
               <Route path="/admin/vartrack" element={<VarTrack />} />{" "}
               <Route path="/admin/changelog" element={<ChangeLog />} />{" "}
+              <Route path="/admin/profile" element={<Profile />} />{" "}
               {/* New Route */}
               {/* VarTrack route */}
             </Route>
