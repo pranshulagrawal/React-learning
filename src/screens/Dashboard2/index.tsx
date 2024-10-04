@@ -21,7 +21,6 @@ import {
   UserOutlined,
   LogoutOutlined,
   SettingOutlined,
-  MailOutlined,
   CloseOutlined,
   CheckCircleOutlined,
   BellOutlined,
@@ -62,7 +61,12 @@ const Breadcrumbs: React.FC = () => {
     href: `/${pathSnippets.slice(0, index + 1).join("/")}`,
   }));
 
-  return <Breadcrumb items={breadcrumbItems} style={{ margin: "10px 20px" }} />;
+  return (
+    <Breadcrumb
+      items={breadcrumbItems}
+      style={{ margin: "10px 20px 5px 20px" }}
+    />
+  );
 };
 
 type NotificationType = "error" | "warning" | "success";
@@ -395,7 +399,7 @@ const Dashboard2: React.FC = () => {
       {/* Modal for Logout Confirmation */}
       <Modal
         title="Confirm Logout"
-        visible={logoutModalVisible}
+        open={logoutModalVisible}
         onOk={handleLogout}
         onCancel={handleLogoutCancel}
         okText="Logout"

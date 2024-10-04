@@ -39,6 +39,10 @@ const AppRoutes: React.FC = () => {
               <Route path="/admin/vartrack" element={<VarTrack />} />{" "}
               <Route path="/admin/changelog" element={<ChangeLog />} />{" "}
               <Route path="/admin/profile" element={<Profile />} />{" "}
+              <Route
+                path="/admin/nodedetail/nodesearch"
+                element={<NodeSearch />}
+              />
               {/* New Route */}
               {/* VarTrack route */}
             </Route>

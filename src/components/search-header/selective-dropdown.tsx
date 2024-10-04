@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Select } from "antd";
 
 const dataList = [
@@ -21,10 +21,23 @@ const dataList = [
 ];
 
 interface HierarchyDropdownProps {
-  onChange: (value: number | null) => void; // Pass the selected value to the parent component
+  onChange: (value: number | null) => void;
+  value?: number | null; // Accept value prop
 }
 
-const HierarchyDropdown: React.FC<HierarchyDropdownProps> = ({ onChange }) => {
+const HierarchyDropdown: React.FC<HierarchyDropdownProps> = ({
+  onChange,
+  value,
+}) => {
+  // Set default value to null if value is undefined
+  const [dropdownValue, setDropdownValue] = useState<number | null>(
+    value ?? null
+  );
+
+  useEffect(() => {
+    setDropdownValue(value ?? null); // Update dropdown value when the prop changes, default to null
+  }, [value]);
+
   const options = dataList?.map((item) => ({
     value: item.key,
     label: item.value,
@@ -32,14 +45,17 @@ const HierarchyDropdown: React.FC<HierarchyDropdownProps> = ({ onChange }) => {
 
   return (
     <Select
-      defaultValue={1} // Default value should match the type of value in options
+      value={dropdownValue} // Use controlled value
       style={{ width: 200 }}
       allowClear
       showSearch
       filterOption={(input, option) =>
         (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
       }
-      onChange={onChange} // Call the parent's onChange function
+      onChange={(newValue) => {
+        setDropdownValue(newValue);
+        onChange(newValue);
+      }}
       options={options}
       placeholder="Select an option"
     />

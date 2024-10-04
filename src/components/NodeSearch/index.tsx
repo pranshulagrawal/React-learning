@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, DatePicker, Table, Spin, Empty, Dropdown, Menu } from "antd";
+import { useSearchParams } from "react-router-dom";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import Papa from "papaparse"; // For CSV export
@@ -7,7 +8,7 @@ import * as XLSX from "xlsx"; // For Excel export
 import "./styles.scss"; // Import the styles
 import HierarchyDropdown from "../search-header/selective-dropdown";
 import TreeWithTreeSelect from "../TreeSelectComponent";
-import { DownloadOutlined, ExportOutlined } from "@ant-design/icons";
+import { DownloadOutlined } from "@ant-design/icons";
 
 dayjs.extend(customParseFormat);
 
@@ -19,7 +20,7 @@ const generateNestedData: any = (depth: number, prefix = "") => {
   return Array.from({ length: 3 }).map((_, i) => {
     const currentDepth = depth + 1;
     const key = `${prefix}${i}`;
-    const hasChildren = currentDepth < 4; // Adjust depth level here
+    const hasChildren = currentDepth < 4;
     return {
       key,
       name: `John Brown ${key}`,
@@ -67,21 +68,54 @@ const NodeSearch = () => {
   ); // To store selected TreeSelect node value
   const [hierarchyLevel, setHierarchyLevel] = useState<number | null>(1); // To store HierarchyDropdown selection with default value
 
+  const [searchParams] = useSearchParams(); // Extract search parameters from the URL
+
   // Simulate loading with a useEffect
   useEffect(() => {
-    // Simulate data fetching/loading process
-    setTimeout(() => {
-      setLoading(false); // After loading is complete, set loading to false
-    }, 1000); // Adjust timeout as per the loading duration
-  }, []);
+    // Get params from URL
+    const businessDate = searchParams.get("businessDate");
+    const nodeId = searchParams.get("nodeId");
+    const hierarchyLevelParam = searchParams.get("hierarchyLevel");
+
+    if (businessDate && nodeId && hierarchyLevelParam) {
+      // Convert date format and set state from URL params
+      setSelectedDate(dayjs(businessDate));
+      setSelectedNode(nodeId);
+      setHierarchyLevel(Number(hierarchyLevelParam));
+
+      // Simulate API call when params are present
+      console.log("API call with URL parameters...");
+      // Dummy API call
+      fetchDummyData();
+    } else {
+      // If no URL params, don't call the API
+      setLoading(false); // Stop spinner
+    }
+  }, [searchParams]);
+
+  // Dummy API call function
+  const fetchDummyData = async () => {
+    setLoading(true);
+    // Simulate API call
+    try {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/posts/1"
+      );
+      const data = await response.json();
+      console.log("Dummy API Data:", data);
+      setLoading(false);
+    } catch (error) {
+      console.error("API call failed:", error);
+      setLoading(false);
+    }
+  };
 
   // Handle Submit Click
   const handleSubmit = () => {
-    setSubmitted(true); // When Submit is clicked, set submitted to true
+    setSubmitted(true);
     console.log("Selected Date:", selectedDate);
     console.log("Selected Node:", selectedNode);
-    const hierarchy = hierarchyLevel ?? 1;
-    console.log("Hierarchy Level:", hierarchy);
+    console.log("Hierarchy Level:", hierarchyLevel);
   };
 
   // Export CSV
@@ -130,15 +164,18 @@ const NodeSearch = () => {
             <DatePicker
               onChange={(date) => setSelectedDate(date)} // Capture selected date
               disabledDate={disabledDate} // Set min/max date constraints
+              value={selectedDate} // Default value from URL or user input
               placeholder="Select a date"
             />
             <TreeWithTreeSelect
               onChange={(value: React.SetStateAction<string | undefined>) =>
                 setSelectedNode(value)
-              } // Capture selected node
+              }
+              value={selectedNode} // Default value from URL or user input
             />
             <HierarchyDropdown
-              onChange={(value) => setHierarchyLevel(value)} // Capture hierarchy level, can be null
+              onChange={(value) => setHierarchyLevel(value)}
+              value={hierarchyLevel} // Default value from URL or user input
             />
             <Button type="primary" onClick={handleSubmit}>
               Submit
@@ -147,8 +184,6 @@ const NodeSearch = () => {
         </div>
 
         {/* Export Button with Dropdown */}
-
-        {/* Second Container: Conditional rendering between Empty and Table */}
         <div className="node-search-table-container">
           {submitted ? (
             <Table

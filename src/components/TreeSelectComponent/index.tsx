@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TreeSelect } from "antd";
 import type { TreeSelectProps } from "antd/es/tree-select";
 
@@ -113,17 +113,25 @@ const treeData = [
 ];
 
 interface TreeWithTreeSelectProps {
-  onChange: (value: string | undefined) => void; // Prop for passing selected value back to the parent
+  onChange: (value: string | undefined) => void;
+  value?: string; // Add value prop to receive selected value
 }
 
 const TreeWithTreeSelect: React.FC<TreeWithTreeSelectProps> = ({
   onChange,
+  value,
 }) => {
-  const [value, setValue] = useState<string | undefined>(undefined);
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(
+    value
+  ); // Initialize with passed value
+
+  useEffect(() => {
+    setSelectedValue(value); // Update the value when props change
+  }, [value]);
 
   const handleChange: TreeSelectProps["onChange"] = (newValue) => {
-    setValue(newValue);
-    onChange(newValue); // Pass the selected value back to the parent component
+    setSelectedValue(newValue);
+    onChange(newValue);
   };
 
   const filterTreeNode = (inputValue: string, treeNode: any) => {
@@ -137,12 +145,12 @@ const TreeWithTreeSelect: React.FC<TreeWithTreeSelectProps> = ({
     <TreeSelect
       className="tree-select"
       showSearch
-      value={value}
+      value={selectedValue} // Use controlled value
       dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
       treeData={treeData}
       placeholder="Please select"
       allowClear
-      onChange={handleChange} // Use the new handleChange function
+      onChange={handleChange}
       filterTreeNode={filterTreeNode}
     />
   );
