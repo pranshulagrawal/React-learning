@@ -50,6 +50,7 @@ const sidebaroptions: MenuItem[] = [
   getItem("Dashboard", "/admin/dashboard", <PieChartOutlined />),
   getItem("Node Details", "/admin/nodedetail", <DesktopOutlined />),
   getItem("VarTrack", "/admin/vartrack", <UserOutlined />),
+  getItem("NodeHierarchy", "/admin/nodehierarchy", <DesktopOutlined />),
 ];
 
 const Breadcrumbs: React.FC = () => {

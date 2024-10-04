@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, DatePicker, Table, Spin, Empty } from "antd";
+import { Button, DatePicker, Table, Spin, Empty, Dropdown, Menu } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import Papa from "papaparse"; // For CSV export
+import * as XLSX from "xlsx"; // For Excel export
 import "./styles.scss"; // Import the styles
 import HierarchyDropdown from "../search-header/selective-dropdown";
 import TreeWithTreeSelect from "../TreeSelectComponent";
+import { DownloadOutlined, ExportOutlined } from "@ant-design/icons";
 
 dayjs.extend(customParseFormat);
 
@@ -58,7 +61,6 @@ const columns = [
 const NodeSearch = () => {
   const [loading, setLoading] = useState(true); // Loading state for spinner
   const [submitted, setSubmitted] = useState(false); // Tracks if Submit has been clicked
-
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null); // To store selected date
   const [selectedNode, setSelectedNode] = useState<string | undefined>(
     undefined
@@ -76,15 +78,44 @@ const NodeSearch = () => {
   // Handle Submit Click
   const handleSubmit = () => {
     setSubmitted(true); // When Submit is clicked, set submitted to true
-
-    // Log the values to the console
     console.log("Selected Date:", selectedDate);
     console.log("Selected Node:", selectedNode);
-
-    // Check if hierarchyLevel is null, and set it to default value if so
     const hierarchy = hierarchyLevel ?? 1;
     console.log("Hierarchy Level:", hierarchy);
   };
+
+  // Export CSV
+  const exportCSV = () => {
+    const csv = Papa.unparse(nestedData);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "export.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Export Excel
+  const exportExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(nestedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+    XLSX.writeFile(workbook, "export.xlsx");
+  };
+
+  // Dropdown Menu for export options
+  const exportMenu = (
+    <Menu>
+      <Menu.Item key="1" onClick={exportCSV}>
+        Export as CSV
+      </Menu.Item>
+      <Menu.Item key="2" onClick={exportExcel}>
+        Export as Excel
+      </Menu.Item>
+    </Menu>
+  );
 
   // Disable dates outside of the minDate and maxDate range
   const disabledDate = (current: Dayjs) => {
@@ -101,7 +132,6 @@ const NodeSearch = () => {
               disabledDate={disabledDate} // Set min/max date constraints
               placeholder="Select a date"
             />
-            {/* Replace TreeSelect with TreeWithTreeSelect */}
             <TreeWithTreeSelect
               onChange={(value: React.SetStateAction<string | undefined>) =>
                 setSelectedNode(value)
@@ -116,6 +146,8 @@ const NodeSearch = () => {
           </div>
         </div>
 
+        {/* Export Button with Dropdown */}
+
         {/* Second Container: Conditional rendering between Empty and Table */}
         <div className="node-search-table-container">
           {submitted ? (
@@ -125,13 +157,26 @@ const NodeSearch = () => {
               loading={false}
               size="small"
               title={() => (
-                <div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexDirection: "row",
+                  }}
+                >
                   Business Date is: {selectedDate?.format("DD/MM/YYYY")}
+                  {submitted && (
+                    <div className="export-dropdown-container">
+                      <Dropdown overlay={exportMenu} placement="bottomCenter">
+                        <Button icon={<DownloadOutlined />} />
+                      </Dropdown>
+                    </div>
+                  )}
                 </div>
               )}
               columns={columns}
               dataSource={nestedData}
-              scroll={{ y: "calc(100vh - 350px)" }} // Dynamic height based on available space
+              scroll={{ y: "calc(100vh - 400px)" }} // Dynamic height based on available space
               indentSize={50}
             />
           ) : (

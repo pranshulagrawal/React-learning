@@ -10,8 +10,6 @@ import {
   Divider,
   Progress,
   Space,
-  Tooltip,
-  Button,
   Typography,
 } from "antd";
 import {
@@ -20,7 +18,6 @@ import {
   SafetyCertificateOutlined,
   MailOutlined,
   PhoneOutlined,
-  EditOutlined,
   GlobalOutlined,
 } from "@ant-design/icons";
 import "./styles.scss";
