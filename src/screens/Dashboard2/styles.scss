@@ -11,7 +11,7 @@
     align-items: center;
     background: #fff; /* Modern gradient background */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Softer shadow for a modern look */
-    padding: 0 5px !important;
+    padding: 0 10px !important;
     gap: 20px;
 
     .app-version {
@@ -52,7 +52,22 @@
 
   .sider-container {
     background: #fff;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 0 8px rgba(0, 0, 0, 0.15);
+
+    .logo {
+      max-width: 87%;
+      height: auto;
+      padding-left: 16px;
+    }
+    .collapsed-logo {
+      max-width: 95%;
+      height: auto;
+      padding-left: 16px;
+    }
+
+    .logo-divider {
+      margin: 0 !important;
+    }
   }
 
   .content-container {

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TreeSelect } from "antd";
 import type { TreeSelectProps } from "antd/es/tree-select";
-import type { DataNode } from "antd/es/tree";
 
 const treeData = [
   {
@@ -113,12 +112,18 @@ const treeData = [
   },
 ];
 
-const TreeWithTreeSelect: React.FC = () => {
+interface TreeWithTreeSelectProps {
+  onChange: (value: string | undefined) => void; // Prop for passing selected value back to the parent
+}
+
+const TreeWithTreeSelect: React.FC<TreeWithTreeSelectProps> = ({
+  onChange,
+}) => {
   const [value, setValue] = useState<string | undefined>(undefined);
 
-  const onChange: TreeSelectProps["onChange"] = (newValue) => {
-    console.log(newValue);
+  const handleChange: TreeSelectProps["onChange"] = (newValue) => {
     setValue(newValue);
+    onChange(newValue); // Pass the selected value back to the parent component
   };
 
   const filterTreeNode = (inputValue: string, treeNode: any) => {
@@ -130,14 +135,14 @@ const TreeWithTreeSelect: React.FC = () => {
 
   return (
     <TreeSelect
+      className="tree-select"
       showSearch
-      style={{ width: "30%" }}
       value={value}
       dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
       treeData={treeData}
       placeholder="Please select"
       allowClear
-      onChange={onChange}
+      onChange={handleChange} // Use the new handleChange function
       filterTreeNode={filterTreeNode}
     />
   );

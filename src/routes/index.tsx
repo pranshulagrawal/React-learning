@@ -9,6 +9,7 @@ import PasswordResetPage from "../screens/ResetPassword";
 import Dashboard2 from "../screens/Dashboard2";
 import NodeSearch from "../components/NodeSearch";
 import ErrorPage from "../screens/ErrorPage";
+import ChangeLog from "../components/ChangeLog";
 
 const VarTrack = () => <div>VarTrack Content</div>;
 
@@ -34,6 +35,8 @@ const AppRoutes: React.FC = () => {
               <Route path="/admin/nodedetail" element={<NodeSearch />} />{" "}
               {/* NodeDetails route */}
               <Route path="/admin/vartrack" element={<VarTrack />} />{" "}
+              <Route path="/admin/changelog" element={<ChangeLog />} />{" "}
+              {/* New Route */}
               {/* VarTrack route */}
             </Route>
             <Route path="/admin/dashboard" element={<Dashboard2 />} />

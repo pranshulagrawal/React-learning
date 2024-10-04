@@ -12,6 +12,8 @@ import {
   Badge,
   Checkbox,
   Tooltip,
+  Divider,
+  Modal,
 } from "antd";
 import {
   PieChartOutlined,
@@ -23,6 +25,7 @@ import {
   CloseOutlined,
   CheckCircleOutlined,
   BellOutlined,
+  LockOutlined,
 } from "@ant-design/icons";
 import "./styles.scss";
 
@@ -105,6 +108,8 @@ const Dashboard2: React.FC = () => {
     "success",
   ]);
 
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false); // State for modal visibility
+
   const unreadCount = Object.values(notifications)
     .flat()
     .filter((notification) => !notification.read).length;
@@ -156,9 +161,13 @@ const Dashboard2: React.FC = () => {
 
   const badgeCount = unreadCount === 0 ? 0 : unreadCount;
 
+  const showLogoutModal = () => {
+    setLogoutModalVisible(true);
+  };
+
   const handleLogout = async () => {
+    setLogoutModalVisible(false);
     try {
-      // Call the logout API
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/auth/logout`,
         {
@@ -168,7 +177,6 @@ const Dashboard2: React.FC = () => {
       );
 
       if (response.ok) {
-        // If successful, navigate to the login page
         navigate("/login");
       } else {
         console.error("Failed to log out");
@@ -178,17 +186,29 @@ const Dashboard2: React.FC = () => {
     }
   };
 
+  const handleLogoutCancel = () => {
+    setLogoutModalVisible(false);
+  };
+
   const profileMenu = (
     <Menu>
-      <Menu.Item key="2" danger disabled>
-        User: John Doe
+      <Menu.Item key="1" icon={<UserOutlined />} disabled>
+        John Doe
       </Menu.Item>
-      <Menu.Item key="1" icon={<SettingOutlined />}>
+      <Menu.Item key="2" icon={<LockOutlined />} disabled>
         V1.0.0
       </Menu.Item>
-
       <Menu.Divider />
-      <Menu.Item key="3" icon={<LogoutOutlined />} onClick={handleLogout}>
+      <Menu.Item
+        key="changelog"
+        icon={<SettingOutlined />}
+        onClick={() => navigate("/admin/changelog")}
+      >
+        Changelog
+      </Menu.Item>
+
+      {/* Using Modal for Logout Confirmation */}
+      <Menu.Item key="3" icon={<LogoutOutlined />} onClick={showLogoutModal}>
         Logout
       </Menu.Item>
     </Menu>
@@ -219,7 +239,6 @@ const Dashboard2: React.FC = () => {
         </div>
 
         <div className="action-btns">
-          {/* Mark All as Read Button */}
           <Button
             type="primary"
             onClick={handleMarkAllAsRead}
@@ -228,7 +247,6 @@ const Dashboard2: React.FC = () => {
             Mark All as Read
           </Button>
 
-          {/* Close Menu Button */}
           <Button
             type="primary"
             onClick={() => setDropdownOpen(false)}
@@ -310,7 +328,22 @@ const Dashboard2: React.FC = () => {
         onCollapse={(value) => setCollapsed(value)}
         className="sider-container"
       >
-        <div className="demo-logo-vertical" />
+        <div className="demo-logo-vertical">
+          {collapsed ? (
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3nMEaIf_7RBcfi_DkNJON4a-qo0ITdtP-mg&s"
+              alt="Collapsed Logo"
+              className="collapsed-logo"
+            />
+          ) : (
+            <img
+              src="https://acceleratingtozero.org/wp-content/uploads/2022/11/netwestlogo-large.png"
+              alt="Expanded Logo"
+              className="logo"
+            />
+          )}
+        </div>
+        <Divider className="logo-divider" />
         <Menu
           theme="light"
           defaultSelectedKeys={["/dashb"]}
@@ -352,6 +385,18 @@ const Dashboard2: React.FC = () => {
           <Outlet />
         </Content>
       </Layout>
+
+      {/* Modal for Logout Confirmation */}
+      <Modal
+        title="Confirm Logout"
+        visible={logoutModalVisible}
+        onOk={handleLogout}
+        onCancel={handleLogoutCancel}
+        okText="Logout"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to log out?</p>
+      </Modal>
     </Layout>
   );
 };

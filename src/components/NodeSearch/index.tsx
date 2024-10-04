@@ -1,38 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { TreeSelect, Button, DatePicker, Table, Spin, Empty } from "antd";
+import { Button, DatePicker, Table, Spin, Empty } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import "./styles.scss"; // Import the styles
 import HierarchyDropdown from "../search-header/selective-dropdown";
+import TreeWithTreeSelect from "../TreeSelectComponent";
 
 dayjs.extend(customParseFormat);
-
-const treeData = [
-  {
-    title: "Node1",
-    value: "0-0",
-    children: [
-      {
-        title: "Child Node1",
-        value: "0-0-0",
-      },
-    ],
-  },
-  {
-    title: "Node2",
-    value: "0-1",
-    children: [
-      {
-        title: "Child Node2",
-        value: "0-1-0",
-      },
-      {
-        title: "Child Node3",
-        value: "0-1-1",
-      },
-    ],
-  },
-];
 
 // Setting the minimum and maximum date constraints
 const minDate = dayjs("2019-08-01");
@@ -86,7 +60,9 @@ const NodeSearch = () => {
   const [submitted, setSubmitted] = useState(false); // Tracks if Submit has been clicked
 
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null); // To store selected date
-  const [selectedNode, setSelectedNode] = useState(null); // To store selected TreeSelect node
+  const [selectedNode, setSelectedNode] = useState<string | undefined>(
+    undefined
+  ); // To store selected TreeSelect node value
   const [hierarchyLevel, setHierarchyLevel] = useState<number | null>(1); // To store HierarchyDropdown selection with default value
 
   // Simulate loading with a useEffect
@@ -125,11 +101,11 @@ const NodeSearch = () => {
               disabledDate={disabledDate} // Set min/max date constraints
               placeholder="Select a date"
             />
-            <TreeSelect
-              treeData={treeData}
-              placeholder="Please select"
-              className="tree-select"
-              onChange={(value) => setSelectedNode(value)} // Capture selected node
+            {/* Replace TreeSelect with TreeWithTreeSelect */}
+            <TreeWithTreeSelect
+              onChange={(value: React.SetStateAction<string | undefined>) =>
+                setSelectedNode(value)
+              } // Capture selected node
             />
             <HierarchyDropdown
               onChange={(value) => setHierarchyLevel(value)} // Capture hierarchy level, can be null
@@ -148,7 +124,11 @@ const NodeSearch = () => {
               bordered
               loading={false}
               size="small"
-              title={() => <div>Node Details</div>}
+              title={() => (
+                <div>
+                  Business Date is: {selectedDate?.format("DD/MM/YYYY")}
+                </div>
+              )}
               columns={columns}
               dataSource={nestedData}
               scroll={{ y: "calc(100vh - 350px)" }} // Dynamic height based on available space
