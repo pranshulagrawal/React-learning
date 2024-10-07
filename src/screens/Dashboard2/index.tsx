@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation, Outlet } from "react-router-dom";
+import { useNavigate, useLocation, Outlet, Link } from "react-router-dom";
 import {
   Layout,
   Menu,
@@ -12,7 +12,6 @@ import {
   Badge,
   Checkbox,
   Tooltip,
-  Divider,
   Modal,
 } from "antd";
 import {
@@ -25,6 +24,9 @@ import {
   CheckCircleOutlined,
   BellOutlined,
   LockOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
 import "./styles.scss";
 
@@ -55,17 +57,50 @@ const sidebaroptions: MenuItem[] = [
 const Breadcrumbs: React.FC = () => {
   const location = useLocation();
   const pathSnippets = location.pathname.split("/").filter((i) => i);
-  const breadcrumbItems = pathSnippets.map((snippet, index) => ({
-    key: index,
-    title: snippet.charAt(0).toUpperCase() + snippet.slice(1),
-    href: `/${pathSnippets.slice(0, index + 1).join("/")}`,
-  }));
+
+  const breadcrumbItems = pathSnippets.map((snippet, index) => {
+    if (snippet === "admin" && index === 0) {
+      return {
+        key: "home",
+        title: (
+          <Link to="/admin/dashboard">
+            <HomeOutlined />
+          </Link>
+        ),
+      };
+    }
+
+    const title = snippet.charAt(0).toUpperCase() + snippet.slice(1);
+
+    return {
+      key: index,
+      title: (
+        <Link to={`/${pathSnippets.slice(0, index + 1).join("/")}`}>
+          {title}
+        </Link>
+      ),
+    };
+  });
+  const lastTitle =
+    pathSnippets[pathSnippets.length - 1]?.charAt(0).toUpperCase() +
+      pathSnippets[pathSnippets.length - 1]?.slice(1) || "Dashboard";
 
   return (
-    <Breadcrumb
-      items={breadcrumbItems}
-      style={{ margin: "10px 20px 5px 20px" }}
-    />
+    <>
+      <h1
+        style={{
+          color: "#5a287d",
+          margin: "10px 20px 0px 20px",
+          fontSize: "20px",
+        }}
+      >
+        {lastTitle}
+      </h1>
+      <Breadcrumb
+        items={breadcrumbItems}
+        style={{ margin: "2px 20px 5px 20px" }}
+      />
+    </>
   );
 };
 
@@ -330,69 +365,76 @@ const Dashboard2: React.FC = () => {
 
   return (
     <Layout className="layout-container">
-      <Sider
-        theme="light"
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-        className="sider-container"
-      >
-        <div className="demo-logo-vertical">
-          {collapsed ? (
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3nMEaIf_7RBcfi_DkNJON4a-qo0ITdtP-mg&s"
-              alt="Collapsed Logo"
-              className="collapsed-logo"
-            />
-          ) : (
-            <img
-              src="https://acceleratingtozero.org/wp-content/uploads/2022/11/netwestlogo-large.png"
-              alt="Expanded Logo"
-              className="logo"
-            />
-          )}
-        </div>
-        <Divider className="logo-divider" />
-        <Menu
-          theme="light"
-          defaultSelectedKeys={["/dashb"]}
-          mode="inline"
-          items={sidebaroptions}
-          onClick={({ key }) => navigate(key)}
-          className="sidebar"
-        />
-      </Sider>
-      <Layout>
-        <Header className="header-container">
-          <div className="notification-section">
-            <Dropdown
-              overlay={NotificationMenu}
-              open={dropdownOpen}
-              onOpenChange={(open) => setDropdownOpen(open)}
-              trigger={["click"]}
-            >
-              <Badge count={badgeCount} offset={[10, 0]}>
-                <Button
-                  className="notification-icon"
-                  type="text"
-                  icon={<BellOutlined />}
-                />
-              </Badge>
-            </Dropdown>
-
-            <Dropdown overlay={profileMenu} trigger={["click"]}>
-              <Avatar
-                className="avatar-container"
-                style={{ backgroundColor: "#87d068" }}
-                icon={<UserOutlined />}
+      <Header className="header-container">
+        <div className="notification-section">
+          <div className="logo-collapse-container">
+            {collapsed ? (
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3nMEaIf_7RBcfi_DkNJON4a-qo0ITdtP-mg&s"
+                alt="Collapsed Logo"
+                className="collapsed-logo"
               />
-            </Dropdown>
+            ) : (
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEk_fS_pAait5KGmnCtnk7X-74kVa6nrRnWQ&s"
+                alt="Expanded Logo"
+                className="logo"
+              />
+            )}
+
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              className="hamburger-menu"
+            />
           </div>
-        </Header>
-        <Content></Content>
-        <Breadcrumbs />
-        <Content className="content-container">
-          <Outlet />
+
+          <Dropdown
+            overlay={NotificationMenu}
+            open={dropdownOpen}
+            onOpenChange={(open) => setDropdownOpen(open)}
+            trigger={["click"]}
+          >
+            <Badge count={badgeCount} offset={[10, 0]}>
+              <Button
+                className="notification-icon"
+                type="text"
+                icon={<BellOutlined />}
+              />
+            </Badge>
+          </Dropdown>
+
+          <Dropdown overlay={profileMenu} trigger={["click"]}>
+            <Avatar
+              className="avatar-container"
+              style={{ backgroundColor: "#87d068" }}
+              icon={<UserOutlined />}
+            />
+          </Dropdown>
+        </div>
+      </Header>
+      <Layout>
+        <Sider
+          theme="light"
+          collapsed={collapsed}
+          onCollapse={(value) => setCollapsed(value)}
+          className="sider-container"
+        >
+          <Menu
+            theme="light"
+            defaultSelectedKeys={["/dashb"]}
+            mode="inline"
+            items={sidebaroptions}
+            onClick={({ key }) => navigate(key)}
+            className="sidebar"
+          />
+        </Sider>
+        <Content>
+          <Breadcrumbs />
+          <Content className="content-container">
+            <Outlet />
+          </Content>
         </Content>
       </Layout>
 
