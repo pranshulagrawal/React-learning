@@ -1,7 +1,40 @@
 .spreadsheet-container {
   height: calc(100vh - 160px);
+  padding: 20px; // Adding some padding around the container
+
+  .date-picker-container {
+    display: flex;
+    align-items: center; // Center items vertically
+    margin-bottom: 20px; // Space below the date picker
+
+    .ant-picker {
+      margin-right: 10px; // Space between date picker and buttons
+      width: 200px; // Set a specific width for the DatePicker
+    }
+
+    button {
+      margin-left: 10px; // Space between buttons
+      border-radius: 5px; // Rounded corners for buttons
+      background-color: #1890ff; // Ant Design primary color
+      color: white; // Button text color
+      border: none; // Remove default border
+      transition: background-color 0.3s; // Smooth transition for hover effect
+
+      &:hover {
+        background-color: #40a9ff; // Change color on hover
+      }
+
+      &:disabled {
+        background-color: #d9d9d9; // Background for disabled buttons
+        color: #bfbfbf; // Text color for disabled buttons
+      }
+    }
+  }
+
   .spreadsheet {
-    height: calc(100vh - 200px);
+    height: calc(100vh - 17.5rem);
     overflow: auto;
+    border-radius: 7px;
+    box-shadow: 0px 0 8px rgba(0, 0, 0, 0.15);
   }
 }
