@@ -164,6 +164,7 @@ const NodeSearch = () => {
             <DatePicker
               onChange={(date) => setSelectedDate(date)} // Capture selected date
               disabledDate={disabledDate} // Set min/max date constraints
+              defaultValue={selectedDate} // Default value from URL or user input
               value={selectedDate} // Default value from URL or user input
               placeholder="Select a date"
             />

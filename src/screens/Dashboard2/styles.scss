@@ -90,9 +90,9 @@
   }
 
   .content-container {
-    overflow-y: auto; /* Allow scrolling only in the content area */
-    height: calc(100vh - 60px); /* Adjust height based on header height */
-    background-color: #f0f2f5;
+    // overflow-y: auto; /* Allow scrolling only in the content area */
+    height: calc(100vh - 160px); /* Adjust height based on header height */
+    background-color: transparent;
     margin: 10px 20px;
   }
 }

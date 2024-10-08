@@ -1,0 +1,7 @@
+.spreadsheet-container {
+  height: calc(100vh - 160px);
+  .spreadsheet {
+    height: calc(100vh - 200px);
+    overflow: auto;
+  }
+}

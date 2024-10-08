@@ -12,6 +12,7 @@ import ErrorPage from "../screens/ErrorPage";
 import ChangeLog from "../components/ChangeLog";
 import Profile from "../components/Profile";
 import DashboardHome from "../components/DashBaordHome";
+import CsvGrid from "../components/ExcelNodeHierarchy/reactgrid";
 
 const VarTrack = () => <div>VarTrack Content</div>;
 
@@ -43,6 +44,7 @@ const AppRoutes: React.FC = () => {
                 path="/admin/nodedetail/nodesearch"
                 element={<NodeSearch />}
               />
+              <Route path="/admin/nodehierarchy" element={<CsvGrid />} />{" "}
               {/* New Route */}
               {/* VarTrack route */}
             </Route>

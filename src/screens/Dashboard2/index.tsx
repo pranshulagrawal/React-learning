@@ -92,6 +92,7 @@ const Breadcrumbs: React.FC = () => {
           color: "#5a287d",
           margin: "10px 20px 0px 20px",
           fontSize: "20px",
+          fontWeight: 500,
         }}
       >
         {lastTitle}
