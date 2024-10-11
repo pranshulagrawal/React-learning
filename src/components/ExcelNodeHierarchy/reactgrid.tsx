@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { ReactGrid, Column, Row } from "@silevis/reactgrid";
+import { ReactGrid, Column, Row, Cell } from "@silevis/reactgrid";
 import "@silevis/reactgrid/styles.css";
-import { Tabs, Spin, DatePicker, Button } from "antd";
+import { Tabs, Spin, DatePicker, Button, Drawer } from "antd";
 import Papa from "papaparse";
 import moment from "moment";
 import "./styles.scss";
@@ -15,9 +15,6 @@ const getColumns = (headers: string[]): Column[] => {
   }));
 };
 
-// Header row definition
-// Define the keys for the node data
-
 // Helper function to create rows based on the object-based CSV data
 const getRows = (
   csvData: Array<Record<string, string>>,
@@ -27,7 +24,7 @@ const getRows = (
     rowId: "header",
     cells: headers.map((header) => ({
       type: "header",
-      text: header.charAt(0).toUpperCase() + header.slice(1).toLowerCase(), // Capitalize the first letter
+      text: header.charAt(0).toUpperCase() + header.slice(1).toLowerCase(),
     })),
   };
 
@@ -35,23 +32,10 @@ const getRows = (
     headerRow,
     ...csvData.map<Row>((node, idx) => ({
       rowId: idx,
-      cells: headers.map((header, index) => {
-        if (header === "level") {
-          return {
-            type: "text",
-            text: node[header],
-            style:
-              node.level === "11"
-                ? { backgroundColor: "red", color: "white" }
-                : {},
-          };
-        }
-
-        return {
-          type: "text",
-          text: node[header],
-        };
-      }),
+      cells: headers.map((header) => ({
+        type: "text",
+        text: node[header] || "",
+      })),
     })),
   ];
 };
@@ -63,6 +47,9 @@ const CsvGrid: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [businessDate, setBusinessDate] = useState<moment.Moment | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [chartData, setChartData] = useState<any>(null);
+  const [selectedColumns, setSelectedColumns] = useState<string[]>([]); // State to track selected columns
 
   const fetchDataForDate = (date: moment.Moment) => {
     setLoading(true);
@@ -134,7 +121,7 @@ const CsvGrid: React.FC = () => {
         <DatePicker
           value={businessDate}
           onChange={(date) => setBusinessDate(date)}
-          disabled={dataLoaded} // Disable date picker after submitting
+          disabled={dataLoaded}
         />
         <Button onClick={handleSubmit} disabled={dataLoaded}>
           Submit
@@ -162,6 +149,7 @@ const CsvGrid: React.FC = () => {
                 stickyTopRows={1}
                 stickyLeftColumns={3}
                 enableRowSelection
+                enableColumnSelection
               />
             </Spin>
           </Tabs.TabPane>
@@ -173,6 +161,7 @@ const CsvGrid: React.FC = () => {
                 stickyTopRows={1}
                 stickyLeftColumns={3}
                 enableRowSelection
+                enableColumnSelection
               />
             </Spin>
           </Tabs.TabPane>
@@ -184,9 +173,11 @@ const CsvGrid: React.FC = () => {
                 stickyTopRows={1}
                 stickyLeftColumns={3}
                 enableRowSelection
+                enableColumnSelection
               />
             </Spin>
           </Tabs.TabPane>
+          {/* Repeat for other tabs if necessary */}
         </Tabs>
       )}
     </div>

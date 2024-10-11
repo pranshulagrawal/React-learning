@@ -27,6 +27,7 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   HomeOutlined,
+  ForkOutlined,
 } from "@ant-design/icons";
 import "./styles.scss";
 
@@ -51,7 +52,8 @@ const sidebaroptions: MenuItem[] = [
   getItem("Dashboard", "/admin/dashboard", <PieChartOutlined />),
   getItem("Node Details", "/admin/nodedetail", <DesktopOutlined />),
   getItem("VarTrack", "/admin/vartrack", <UserOutlined />),
-  getItem("NodeHierarchy", "/admin/nodehierarchy", <DesktopOutlined />),
+  getItem("Node Hierarchy", "/admin/nodehierarchy", <DesktopOutlined />),
+  getItem("Tree Chart", "/admin/treechart", <ForkOutlined />),
 ];
 
 const Breadcrumbs: React.FC = () => {
