@@ -28,6 +28,7 @@ import {
   MenuFoldOutlined,
   HomeOutlined,
   ForkOutlined,
+  FileOutlined,
 } from "@ant-design/icons";
 import "./styles.scss";
 
@@ -50,10 +51,42 @@ function getItem(
 
 const sidebaroptions: MenuItem[] = [
   getItem("Dashboard", "/admin/dashboard", <PieChartOutlined />),
-  getItem("Node Details", "/admin/nodedetail", <DesktopOutlined />),
-  getItem("VarTrack", "/admin/vartrack", <UserOutlined />),
-  getItem("Node Hierarchy", "/admin/nodehierarchy", <DesktopOutlined />),
-  getItem("Tree Chart", "/admin/treechart", <ForkOutlined />),
+
+  getItem("Node Management", "/admin/node-management", <DesktopOutlined />, [
+    getItem("Node Details", "/admin/nodedetail", <DesktopOutlined />),
+    getItem("Node Analytics", "/admin/nodeanalytics", <DesktopOutlined />),
+    getItem("Node Comparison", "/admin/nodecomparison", <DesktopOutlined />),
+    getItem(
+      "Interactive Node Editor",
+      "/admin/nodeeditor",
+      <DesktopOutlined />
+    ),
+    getItem("Historical Timeline", "/admin/nodetimeline", <DesktopOutlined />),
+    getItem("Batch Node Operations", "/admin/nodebatch", <DesktopOutlined />),
+  ]),
+
+  getItem("Tree Visualization", "/admin/tree-visualization", <ForkOutlined />, [
+    getItem("Hierarchy Map", "/admin/treechart"),
+    getItem("Tree Map with Heatmaps", "/admin/treemapheatmaps"),
+    getItem("Interactive Drill-down", "/admin/nodedrilldown"),
+    getItem("Collapsible Tree View", "/admin/collapsibletree"),
+    getItem("Node Clustering", "/admin/nodeclustering"),
+    getItem("Node Dependency Mapping", "/admin/nodedependencymap"),
+  ]),
+
+  getItem("Reports & Export", "/admin/reports", <FileOutlined />, [
+    getItem("Custom Node Reports", "/admin/customnodereports"),
+    getItem("Data Export & Download", "/admin/nodehierarchy"),
+  ]),
+
+  getItem("Settings", "/admin/settings", <SettingOutlined />, [
+    getItem("Notifications & Alerts", "/admin/notifications"),
+    getItem("User Permissions & Roles", "/admin/userpermissions"),
+    getItem("Customizable Widgets", "/admin/dashboardwidgets"),
+    getItem("Predictive Node Analysis", "/admin/predictivenodeanalysis"),
+    getItem("Node Search & Filter", "/admin/nodesearchfilter"),
+    getItem("Node Activity Log", "/admin/nodeactivitylog"),
+  ]),
 ];
 
 const Breadcrumbs: React.FC = () => {

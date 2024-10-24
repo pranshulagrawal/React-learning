@@ -1,0 +1,50 @@
+[
+  {
+    "version": "1.2.0",
+    "date": "2024-10-01",
+    "icon": "rocket",
+    "color": "green",
+    "changes": [
+      {
+        "type": "feature",
+        "description": "Added new notification filter features"
+      },
+      {
+        "type": "improvement",
+        "description": "Improved performance for large data tables"
+      },
+      {
+        "type": "misc",
+        "description": "Other minor bug fixes and performance improvements."
+      }
+    ]
+  },
+  {
+    "version": "1.1.0",
+    "date": "2024-09-15",
+    "icon": "check-circle",
+    "color": "blue",
+    "changes": [
+      {
+        "type": "feature",
+        "description": "Introduced user profile settings"
+      },
+      {
+        "type": "improvement",
+        "description": "Bug fixes and UI enhancements"
+      }
+    ]
+  },
+  {
+    "version": "1.0.0",
+    "date": "2024-09-01",
+    "icon": "bug",
+    "color": "red",
+    "changes": [
+      {
+        "type": "feature",
+        "description": "Initial release with dashboard and user management features"
+      }
+    ]
+  }
+]

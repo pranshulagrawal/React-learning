@@ -47,9 +47,6 @@ const CsvGrid: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [businessDate, setBusinessDate] = useState<moment.Moment | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [drawerVisible, setDrawerVisible] = useState(false);
-  const [chartData, setChartData] = useState<any>(null);
-  const [selectedColumns, setSelectedColumns] = useState<string[]>([]); // State to track selected columns
 
   const fetchDataForDate = (date: moment.Moment) => {
     setLoading(true);
